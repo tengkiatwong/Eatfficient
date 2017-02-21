@@ -1,0 +1,62 @@
+<!--
+<script src="https://cdn.datatables.net/1.10.13/js/jquery.dataTables.min.js"></script>
+<script src="https://cdn.datatables.net/1.10.13/js/dataTables.bootstrap.min.js"></script>
+<link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.10.13/css/dataTables.bootstrap.min.css">
+<script>
+    $(document).ready(function() {
+    $('#ab').DataTable();
+} );
+</script>
+-->
+<div class="container">
+    
+    
+    <div class="pull-righ">
+        <button class="btn btn-success" ng-click="newIngredient()">
+            <span class="glyphicon glyphicon-plus"></span>
+            Create new
+        </button>
+	</div>
+    
+    <!--spacer-->
+    <div style="height:1em"></div>
+    <!--spacer-->
+    
+    <table id="ab" class="table table-hover table-bordered" cellspacing="0" width="100%" style="padding-top:1em">
+        <thead class="thead-inverse">
+            <tr>
+                <th style="width:5%">ID</th>
+                <th style="width:23%">Name</th>
+                <th>Description</th>
+                <th style="width:15%">Category</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr ng-repeat="ingredient in ingredientsList" ng-click="getDetails(ingredient.ingredientId)">
+                <td>{{ingredient.ingredientId}}</td>
+                <td>{{ingredient.name}}</td>
+                <td>{{ingredient.description}}</td>
+                <td>{{ingredient.category}}</td>
+            </tr>
+        </tbody>
+    </table>
+</div>
+
+
+<!--  Details Modal  -->
+<script type="text/ng-template" id="ingredientDetails.html">
+	<div class="modal-header">
+		<h3 class="modal-title" style="display:inline">{{selectedItem.name}}</h3>
+        <p class="pull-right">Ingredient ID: {{selectedItem.ingredientId}}</p>
+	</div>
+	<div class="modal-body">
+        <h3>Category: {{selectedItem.category}}</h3>
+        <h3>Description: {{selectedItem.description}}</h3>
+	</div>
+	<div class="modal-footer">
+<!--		<button class="btn btn-success" ng-click="ok()">OK</button>-->
+        <a type="button" class="btn btn-primary" ng-click="cancel()" href="#/inventory/{{selectedItem.ingredientId}}" >Yes</a>
+		<button class="btn btn-default" ng-click="cancel()">Cancel</button>
+	</div>
+</script>
+<!-- End Details Modal  -->
