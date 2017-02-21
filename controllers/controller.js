@@ -58,7 +58,7 @@ webApp.controller('InventoryController', ['$scope','$uibModal', function($scope,
     $scope.getDetails = function(ingredientId){
         $modal.open({
                 templateUrl: 'ingredientDetails.html',
-                controller: ['$scope', '$uibModalInstance', 'items', function ($scope, $instance, items) {
+                controller: ['EditIngredient','$scope', '$uibModalInstance','items', function (EditIngredient,$scope, $instance, items) {
 
                     $scope.items = items;
                     $scope.selectedItem;
@@ -74,9 +74,9 @@ webApp.controller('InventoryController', ['$scope','$uibModal', function($scope,
                     };
 
                     $scope.ok = function () {
-//                        $instance.close($scope.selected.item);
                         console.log("editing");
-                        
+                        EditIngredient.currentItem = $scope.selectedItem;
+                        $instance.close($scope.selected.item);
                     };
 
                     $scope.cancel = function () {
@@ -92,14 +92,21 @@ webApp.controller('InventoryController', ['$scope','$uibModal', function($scope,
             }).result.then(function (selectedItem) {
                 $scope.selected = {fruit: selectedItem}
             }, function () {
-                console.log('Modal dismissed at: ' + new Date());
+                //console.log('Modal dismissed at: ' + new Date());
             });
     }
     
 }]);
 
-webApp.controller('IngredientDetailController',['$scope',function($scope){
-    $scope.testv = "zazazazaza";
+webApp.controller('IngredientDetailController', ['EditIngredient', '$scope', function(EditIngredient, $scope) {
+    console.log('Starting IngredientDetailController');
+//    EditIngredient.getOrders().then(function(response) {
+//        $scope.result = response.data;
+//    }, function(error) {
+//        console.log('opsssss' + error);
+//    });
+    $scope.currentItem = EditIngredient.currentItem;
+    console.log($scope.currentItem);
 }]);
 
 webApp.controller('SuppliersController', ['$scope', function($scope){
@@ -115,3 +122,44 @@ webApp.controller('PoController', ['$scope', function($scope){
 webApp.controller('RecordController', ['$scope', function($scope){
 	$scope.foo1 = 'barzz';
 }]);
+
+
+webApp.factory('EditIngredient', function($http) {
+   
+    var o = {
+        orders: [],
+        currentItem: {}
+    };
+//     o.getOrders = function(){
+//        return $http({
+//            method: 'GET',
+////            url: ' http://localhost:8080/TestEnterprise-war/webresources/ejb.TestingRestful/createIngredient? ',            
+//            url:'http://52.230.31.77:8080/TestEnterprise-war/webresources/ejb.IngredientsRestful/testing',
+////            param1: "kangkong"
+////            url: 'http://52.187.124.187:8080/OutletManagementSystem-war/api/member/submitForm',
+//            message: {age:999,email:"CantSeeMe@Cena.com",name: "John Cena"}
+////            url: 'http://52.187.124.187:8080/api/multiply/3/4'
+////            url: 'https://openweathermap.org/current'
+//        }).success(function(data){
+//            console.log(data);
+//            o.orders = data;
+//        });
+//    }
+//     
+//     //remove order
+//     o.remove = function(order){
+//         o.orders.splice(o.orders.indexOf(order),1);
+//         console.log("spliced");
+//     } 
+//     
+//     o.newOrder = function(order){
+//         console.log(order);
+//         // return $http
+//     }
+     
+    return o;
+})
+
+
+
+
