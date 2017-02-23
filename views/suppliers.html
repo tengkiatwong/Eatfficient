@@ -1,0 +1,53 @@
+<div class="container">
+    <div>
+        <div style="font-size:2em;padding-right:1em;display:inline">Suppliers</div>
+        <div style="display:inline">
+                <button class="btn btn-success" ng-click="newIngredient()">
+                    <span class="glyphicon glyphicon-plus"></span>
+                    Create new
+                </button>
+        </div>
+    </div>
+    
+    <!-- Supplier list table   -->
+    <!--spacer-->
+    <div style="height:1em"></div>
+    <!--spacer-->
+    
+    <table id="ab" class="table table-hover table-bordered" cellspacing="0" width="100%" style="padding-top:1em">
+        <thead class="thead-inverse">
+            <tr>
+                <th style="width:5%">ID</th>
+                <th style="width:23%">Name</th>
+                <th>Type</th>
+                <th style="width:15%">contact</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr ng-repeat="supplier in suppliers" ng-click="getDetails(supplier.supplierId)">
+                <td>{{supplier.supplierId}}</td>
+                <td>{{supplier.name}}</td>
+                <td>{{supplier.type}}</td>
+                <td>{{supplier.contactNumber}}</td>
+            </tr>
+        </tbody>
+    </table>
+</div>
+
+<!--  Details Modal  -->
+<script type="text/ng-template" id="supplierDetails.html">
+	<div class="modal-header">
+		<h3 class="modal-title" style="display:inline">Viewing Supplier: {{selectedItem.name}}</h3>
+	</div>
+	<div class="modal-body">
+        <h2>Supplier ID: {{selectedItem.supplierId}}</h2>
+        <h2>Contact Number: {{selectedItem.contactNumber}}</h2>
+        <h2>Type: {{selectedItem.type}}</h2>
+	</div>
+	<div class="modal-footer">
+<!--		<button class="btn btn-success" ng-click="ok()">OK</button>-->
+        <a type="button" class="btn btn-primary" ng-click="ok()" href="#/suppliers/{{selectedItem.supplierId}}" >Edit</a>
+		<button class="btn btn-default" ng-click="cancel()">Cancel</button>
+	</div>
+</script>
+<!-- End Details Modal  -->

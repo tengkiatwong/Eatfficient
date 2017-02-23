@@ -11,13 +11,15 @@
 <div class="container">
     
     
-    <div class="pull-righ">
+<!--
+    <div class="">
         <button class="btn btn-success" ng-click="newIngredient()">
             <span class="glyphicon glyphicon-plus"></span>
             Create new
         </button>
 	</div>
-    
+-->
+    <div style="font-size:2em">Inventory</div>
     <!--spacer-->
     <div style="height:1em"></div>
     <!--spacer-->
@@ -59,4 +61,23 @@
 		<button class="btn btn-default" ng-click="cancel()">Cancel</button>
 	</div>
 </script>
+<!-- End Details Modal  -->
+
+<!--  Create Ingredient Modal  -->
+<!--
+<script type="text/ng-template" id="createIngredient.html">
+	<div class="modal-header">
+		<h3 class="modal-title" style="display:inline">Create new ingredient</h3>
+        <p class="pull-right">Ingredient ID: {{selectedItem.ingredientId}}</p>
+	</div>
+	<div class="modal-body">
+        
+	</div>
+	<div class="modal-footer">
+		<button class="btn btn-success" ng-click="ok()">OK</button>
+        <a type="button" class="btn btn-primary" ng-click="ok()" href="#/inventory/{{selectedItem.ingredientId}}" >Yes</a>
+		<button class="btn btn-default" ng-click="cancel()">Cancel</button>
+	</div>
+</script>
+-->
 <!-- End Details Modal  -->
