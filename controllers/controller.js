@@ -112,14 +112,14 @@ webApp.controller('IngredientDetailController', ['EditIngredient', '$scope', fun
 webApp.controller('SuppliersController', ['$scope','$uibModal', function($scope,$modal){
 
 	$scope.suppliers = [
-        {supplierId:1,name:"Fresh Steak Gods",contactNumber:"+65 6123 6125",type:"Steak"},
-        {supplierId:2,name:"VegeFarm",contactNumber:"+65 1234 2342",type:"Vegetables"}
+        {supplierId:1,name:"Fresh Steak Gods",contactNumber:91239124,type:"Steak"},
+        {supplierId:2,name:"VegeFarm",contactNumber:99999999,type:"Vegetables"}
     ];
     $scope.items = $scope.suppliers;
     $scope.getDetails = function(supplierId){
         $modal.open({
                 templateUrl: 'supplierDetails.html',
-                controller: ['EditIngredient','$scope', '$uibModalInstance','items', function (EditIngredient,$scope, $instance, items) {
+                controller: ['SupplierService','$scope', '$uibModalInstance','items', function (SupplierService,$scope, $instance, items) {
 
                     $scope.items = items;
                     $scope.selectedItem;;
@@ -133,7 +133,7 @@ webApp.controller('SuppliersController', ['$scope','$uibModal', function($scope,
                     };
 
                     $scope.ok = function () {
-                        EditIngredient.currentItem = $scope.selectedItem;
+                        SupplierService.currentItem = $scope.selectedItem;
                         $instance.close($scope.selected.item);
                     };
 
@@ -156,14 +156,25 @@ webApp.controller('SuppliersController', ['$scope','$uibModal', function($scope,
 }]);
 
 webApp.controller('SuppliersEditController', ['SupplierService', '$scope', function(SupplierService, $scope) {
-    console.log('Starting Supplier Edit');
-//    EditIngredient.getOrders().then(function(response) {
-//        $scope.result = response.data;
-//    }, function(error) {
-//        console.log('opsssss' + error);
-//    });
-//    $scope.currentItem = EditIngredient.currentItem;
-//    console.log($scope.currentItem)
+    console.log('--------Starting Supplier Edit---------');
+    
+    $scope.tes;
+    SupplierService.getOrders().then(function(response) {
+        $scope.result = response.data;
+    }, function(error) {
+        console.log('opsssss' + error);
+    });
+    $scope.currentItem = SupplierService.currentItem;
+    $scope.supplier = {
+        supplierId: $scope.currentItem.supplierId,
+        name: $scope.currentItem.name,
+        contactNumber: $scope.currentItem.contactNumber,
+        type: $scope.currentItem.type
+    }
+    
+    $scope.updateSupplier = function(){
+        console.log($scope.supplier);
+    }
 }]);
 
 webApp.controller('PoController', ['$scope', function($scope){
@@ -180,7 +191,7 @@ webApp.factory('SupplierService', function($http) {
    
     var o = {
         orders: [],
-        currentItem: {ingredientId:8,category:"Dessert",name:"Ice-cream8",description:"Melts in your mouth"}
+        currentItem: {supplierId:2,name:"VegeFarm",contactNumber:99999999,type:"Vegetables"}
     };
     
     o.createOrder = function(){

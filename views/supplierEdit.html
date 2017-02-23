@@ -1,1 +1,40 @@
-<h1>Supplier Edit Page</h1>
+<div class="container">
+<div class="panel panel-default">
+        <div class="panel-heading">
+          <div class="panel-title">
+            
+            <h4><i class="glyphicon glyphicon-wrench" style="padding-right:0.5em"></i> {{currentItem.name}}
+                (Supplier Id: {{currentItem.supplierId}}) 
+            </h4>
+          </div>
+        </div>
+        <div class="panel-body">
+          
+          <form class="form form-vertical">
+            <div class="control-group">
+              <label>Contact Number</label>
+              <div class="controls">
+                <input type="number" class="form-control" ng-model="supplier.contactNumber">
+              </div>
+            </div>      
+            <div class="control-group">
+              <label>Type</label>
+              <div class="controls">
+                <input type="text" class="form-control" ng-model="supplier.type">
+                
+              </div>
+            </div>   
+            <div class="control-group">
+              <label></label>
+              <div class="controls">
+                <button type="submit" class="btn btn-primary" ng-click="updateSupplier()">
+                  Confirm
+                </button>
+              </div>
+            </div>   
+            
+          </form>
+          
+          
+        </div><!--/panel content-->
+      </div><!--/panel-->
