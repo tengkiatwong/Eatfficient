@@ -174,6 +174,8 @@ webApp.controller('SuppliersEditController', ['SupplierService', '$scope', funct
     
     $scope.updateSupplier = function(){
         console.log($scope.supplier);
+        // $http request send $scope.supplier
+        //redirect
     }
 }]);
 
@@ -190,6 +192,7 @@ webApp.controller('RecordController', ['$scope', function($scope){
 webApp.factory('SupplierService', function($http) {
    
     var o = {
+        state: 0,
         orders: [],
         currentItem: {supplierId:2,name:"VegeFarm",contactNumber:99999999,type:"Vegetables"}
     };
