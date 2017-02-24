@@ -1,0 +1,94 @@
+<div class="container">
+<h1>Purchase Order Page</h1>
+
+<table id="ab" class="table table-hover table-bordered" cellspacing="0" width="100%" style="padding-top:1em">
+        <thead class="thead-inverse">
+            <tr>
+                <th style="width:5%">ID</th>
+                <th style="width:10%">Date Created</th>
+                <th>Ingredients</th>
+                <th style="width:25%">Supplier</th>
+                <th style="width:10%">Total Worth</th>
+                <th style="width:10%">Status</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr ng-repeat="purchaseOrder in purchaseOrders" ng-click="getDetails(purchaseOrder.ID)">
+                <td>{{purchaseOrder.ID}}</td>
+                <td>{{purchaseOrder.DateCreated}}</td>
+                <td>
+                    <div data-ng-repeat="i in purchaseOrder.Ingredients">
+                        {{i}}
+                    </div>
+                </td>
+                <td>{{purchaseOrder.SupplierName}}</td>
+                <td>$ {{purchaseOrder.TotalWorth}}</td>
+                <td>{{purchaseOrder.Status}}</td>
+            </tr>
+        </tbody>
+    </table>
+    
+</div>
+
+<!--  Details Modal  -->
+<script type="text/ng-template" id="PoDetails.html">
+	<div class="modal-header" style="background-color:limegreen;color:white">
+        <div style="font-size:2em;display:inline">{{selectedItem.SupplierName}}</div>
+        <div class="pull-right" style="font-size:2em">[{{selectedItem.ID}}]</div>
+	</div>
+	<div class="modal-body">
+        <div style="font-size:1.5em;border-bottom:1px solid gray">
+            <div style="display:inline">Date Created: {{selectedItem.DateCreated}}</div>
+            <div class="pull-right" ng-class="{'pending':selectedItem.Status=='pending','cancelled':selectedItem.Status=='cancelled','fulfilled':selectedItem.Status=='fulfilled'}">
+                {{selectedItem.Status}}
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-4">
+                <h4>Ingredient</h4>
+                <h4 data-ng-repeat="i in ingredientArr">{{i}}</h4>
+            </div>
+            <div class="col-md-4">
+                <h4>Quantity ({{selectedItem.Unit}})</h4>
+                <h4 data-ng-repeat="i in quantityArr">{{i}}</h4>
+            </div>
+            <div class="col-md-4">
+                <h4>Price per Unit</h4>
+                <h4 data-ng-repeat="i in priceArr">{{i}}</h4>
+            </div>
+        </div>
+        <div style="border-top:1px solid black;font-size:2em">Total Worth: ${{selectedItem.TotalWorth}}</div>
+        <div class="form-group">
+          <label for="sel1">Edit Status</label>
+          <select class="form-control" ng-model="master.Status">
+            <option>pending</option>
+            <option>cancelled</option>
+            <option>fulfilled</option>
+          </select>
+        </div>
+        </div>
+	</div>
+<!--    <div style="">{{selectedItem.TotalWorth}}</div>-->
+	<div class="modal-footer">
+<!--		<button class="btn btn-success" ng-click="ok()">OK</button>-->
+        <a type="button" id="editButton" class="btn btn-primary" ng-click="ok()">
+            <span class="glyphicon glyphicon-pencil"></span> Edit
+        </a>
+         <a type="button" id="saveButton" class="btn btn-success" ng-click="save()" style="display:none">
+            <span class="glyphicon glyphicon-floppy-disk"></span> Save
+        </a>
+		<button class="btn btn-default" ng-click="cancel()">Cancel</button>
+	</div>
+</script>
+
+<style>
+    .pending {
+        color: orange;
+    }
+    .cancelled {
+        color:red;
+    }
+    .fulfilled {
+        color: green;
+    }
+</style>

@@ -157,9 +157,6 @@ webApp.controller('SuppliersController', ['$scope','$uibModal', function($scope,
 }]);
 
 webApp.controller('SuppliersEditController', ['SERVER','SupplierService', '$scope', function(SERVER,SupplierService, $scope) {
-    console.log('--------Starting Supplier Edit---------');
-    console.log(SERVER.url);
-    $scope.tes;
     SupplierService.getOrders().then(function(response) {
         $scope.result = response.data;
     }, function(error) {
@@ -180,10 +177,68 @@ webApp.controller('SuppliersEditController', ['SERVER','SupplierService', '$scop
     }
 }]);
 
-webApp.controller('PoController', ['$scope', function($scope){
-	$scope.foo1 = 'barzz';
+webApp.controller('PoController', ['$uibModal','PoService','$scope', function($modal,PoService,$scope){
+	$scope.purchaseOrders = PoService.purchaseOrders;
+    for(i=0;i<$scope.purchaseOrders.length;i++){
+        var totalWorth = 0;
+        var qArr = $scope.purchaseOrders[i].Quantity;
+        var pArr = $scope.purchaseOrders[i].Prices;
+        for(j=0;j<qArr.length;j++){
+            totalWorth += parseFloat(qArr[j])*parseFloat(pArr[j]);
+        }
+        $scope.purchaseOrders[i].TotalWorth = parseFloat(totalWorth).toFixed(2);
+    }
+    
+    $scope.items = $scope.purchaseOrders;
+    $scope.getDetails = function(PoId){
+        $modal.open({
+                templateUrl: 'PoDetails.html',
+                controller: ['SupplierService','$scope', '$uibModalInstance','items', function (SupplierService,$scope, $instance, items) {
+
+                    $scope.items = items;
+                    $scope.selectedItem;
+                    $scope.master;
+                    for(i = 0; i<items.length; i++){
+                        if(items[i].ID == PoId){
+                            $scope.selectedItem=items[i];
+                            $scope.master = angular.copy($scope.selectedItem);
+                        }
+                    }
+                    $scope.ingredientArr = $scope.selectedItem.Ingredients;
+                    $scope.quantityArr = $scope.selectedItem.Quantity;
+                    $scope.priceArr = $scope.selectedItem.Prices;
+                    $scope.selected = {
+                        item: $scope.items[0]
+                    };
+
+                    $scope.ok = function () {
+                        PoService.currentItem = $scope.selectedItem;
+                        console.log($scope.master.Status);
+                    };
+
+                    $scope.cancel = function () {
+                        $instance.dismiss('cancel');
+                    };
+                }],
+                size: 'lg',
+                resolve: {
+                    items: function () {
+                        return $scope.items;
+                    }
+                }
+            }).result.then(function (selectedItem) {
+                $scope.selected = {fruit: selectedItem}
+            }, function () {
+                //console.log('Modal dismissed at: ' + new Date());
+            });
+    }
+    
 }]);
 
+//webApp.controller('PoEditController',['SERVER','PoService','$scope',function(SERVER,PoService,$scope){
+//    $scope.currentItem = PoService.currentItem;
+//    $scope.master = angular.copy($scope.currentItem);
+//}]);
 
 webApp.controller('RecordController', ['$scope', function($scope){
 	$scope.foo1 = 'barzz';
@@ -278,6 +333,32 @@ webApp.factory('EditIngredient', function($http,SERVER) {
     return o;
 })
 
+//PurchaseOrder Service
+webApp.factory('PoService',function($http,SERVER){
+    var o = {
+        currentItem:{},
+        purchaseOrders: [
+            {
+                ID: 25,SupplierName:"VegeFarm Pte. Ltd.",DateCreated:"28/02/2017", Status:"pending",
+                Ingredients:["Ponyo", "KangKong", "Cheddar"],Quantity: [2,5,10],Prices:[5.50,4.20,10.51]
+            },
+            {
+                ID: 26,SupplierName:"VegeFarm Pte. Ltd.",DateCreated:"28/02/2017", Status:"cancelled",
+                Ingredients:["Ponyo", "KangKong", "Cheddar"],Quantity: [2,5,10],Prices:[15.52,42.13,10.29]
+            },
+            {
+                ID: 27,SupplierName:"VegeFarm Pte. Ltd.",DateCreated:"28/02/2017", Status:"fulfilled",
+                Ingredients:["Ponyo", "KangKong", "Cheddar"],Quantity: [2,5,10],Prices:[15.52,42.13,10.29]
+            }
+        ]
+    }
+    
+    return o;
+})
+
+
+
+//SERVER url
 webApp.factory('SERVER',function(){
     var o = {
         url: 'http://52.187.179.134:8080'

@@ -17,12 +17,20 @@ webApp.config(['$routeProvider', function($routeProvider) {
             templateUrl: 'views/suppliers.html',
             controller: 'SuppliersController'
         })
-        // Supplier Edit
         .when('/suppliers/:supplier',{
             templateUrl: 'views/supplierEdit.html',
             controller: 'SuppliersEditController'
         })
-        
+    
+        //purchaseOrder module
+        .when('/purchaseOrders',{
+            templateUrl: 'views/purchaseOrders.html',
+            controller: 'PoController'
+        })
+//        .when('/purchaseOrders/:purchaseOrderID',{
+//            templateUrl: 'views/editPurchaseOrder.html',
+//            controller: 'PoEditController'
+//        })
     
     
     
