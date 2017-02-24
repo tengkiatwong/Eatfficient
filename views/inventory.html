@@ -34,11 +34,11 @@
             </tr>
         </thead>
         <tbody>
-            <tr ng-repeat="ingredient in ingredientsList" ng-click="getDetails(ingredient.ingredientId)">
-                <td>{{ingredient.ingredientId}}</td>
-                <td>{{ingredient.name}}</td>
-                <td>{{ingredient.description}}</td>
-                <td>{{ingredient.category}}</td>
+            <tr ng-repeat="ingredient in ingredientsList" ng-click="getDetails(ingredient.ID)">
+                <td>{{ingredient.ID}}</td>
+                <td>{{ingredient.Name}}</td>
+                <td>{{ingredient.Description}}</td>
+                <td>{{ingredient.Category}}</td>
             </tr>
         </tbody>
     </table>
@@ -47,37 +47,29 @@
 
 <!--  Details Modal  -->
 <script type="text/ng-template" id="ingredientDetails.html">
-	<div class="modal-header">
-		<h3 class="modal-title" style="display:inline">{{selectedItem.name}}</h3>
-        <p class="pull-right">Ingredient ID: {{selectedItem.ingredientId}}</p>
+	<div class="modal-header" style="background-color:limegreen">
+		<h3 class="modal-title" style="display:inline;color:white">{{selectedItem.Name}}</h3>
+        <h4 class="pull-right" style="color:white">Ingredient ID: {{selectedItem.ID}}</h4>
 	</div>
 	<div class="modal-body">
-        <h3>Category: {{selectedItem.category}}</h3>
-        <h3>Description: {{selectedItem.description}}</h3>
+        <h3>Category: {{selectedItem.Category}}</h3>
+        <h3>Description: {{selectedItem.Description}}</h3>
+        <h3>OutLet Name: {{selectedItem.OutletName}}</h3>
+        <h3>Price: {{selectedItem.Price}}</h3>
+        <h3>Unit: {{selectedItem.Unit}}</h3>
+        <h3>Unit Purchase Price: {{selectedItem.UnitPurchasePrice}}</h3>
 	</div>
 	<div class="modal-footer">
 <!--		<button class="btn btn-success" ng-click="ok()">OK</button>-->
-        <a type="button" class="btn btn-primary" ng-click="ok()" href="#/inventory/{{selectedItem.ingredientId}}" >Yes</a>
+        <a type="button" class="btn btn-primary" ng-click="ok()" href="#/inventory/{{selectedItem.ID}}" >
+            <span class="glyphicon glyphicon-pencil"></span> Edit
+        </a>
 		<button class="btn btn-default" ng-click="cancel()">Cancel</button>
 	</div>
 </script>
-<!-- End Details Modal  -->
 
-<!--  Create Ingredient Modal  -->
-<!--
-<script type="text/ng-template" id="createIngredient.html">
-	<div class="modal-header">
-		<h3 class="modal-title" style="display:inline">Create new ingredient</h3>
-        <p class="pull-right">Ingredient ID: {{selectedItem.ingredientId}}</p>
-	</div>
-	<div class="modal-body">
-        
-	</div>
-	<div class="modal-footer">
-		<button class="btn btn-success" ng-click="ok()">OK</button>
-        <a type="button" class="btn btn-primary" ng-click="ok()" href="#/inventory/{{selectedItem.ingredientId}}" >Yes</a>
-		<button class="btn btn-default" ng-click="cancel()">Cancel</button>
-	</div>
-</script>
--->
-<!-- End Details Modal  -->
+<style>
+#gfg {
+    color: green
+}
+</style>

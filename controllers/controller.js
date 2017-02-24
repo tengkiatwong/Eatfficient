@@ -34,28 +34,34 @@ webApp.controller('HomepageController', ['$scope', '$uibModal', function($scope,
 	};
 }]);
 
-webApp.controller('InventoryController', ['$scope','$uibModal', function($scope,$modal){
+webApp.controller('InventoryController', ['EditIngredient','$scope','$uibModal', function(EditIngredient,$scope,$modal){
 	$scope.foo = 'bar';
-    $scope.ingredientsList = [
-        {ingredientId:1,category:"Appetizer",name:"French Fries",description:"Awesome Tasting Fries"},
-        {ingredientId:2,category:"Main Dish",name:"Ribeye Steak",description:"Authentic,fresh cut"},
-        {ingredientId:3,category:"Dessert",name:"Ice-cream",description:"Melts in your mouth"},
-        {ingredientId:4,category:"Dessert",name:"Ice-cream4",description:"Melts in your mouth"},
-        {ingredientId:5,category:"Dessert",name:"Ice-cream5",description:"Melts in your mouth"},
-        {ingredientId:6,category:"Dessert",name:"Ice-cream6",description:"Melts in your mouth"},
-        {ingredientId:7,category:"Dessert",name:"Ice-cream7",description:"Melts in your mouth"},
-        {ingredientId:8,category:"Dessert",name:"Ice-cream8",description:"Melts in your mouth"},
-    ]
+//    $scope.ingredientsList = [
+//        {ingredientId:1,category:"Appetizer",name:"French Fries",description:"Awesome Tasting Fries"},
+//        {ingredientId:2,category:"Main Dish",name:"Ribeye Steak",description:"Authentic,fresh cut"},
+//        {ingredientId:3,category:"Dessert",name:"Ice-cream",description:"Melts in your mouth"},
+//        {ingredientId:4,category:"Dessert",name:"Ice-cream4",description:"Melts in your mouth"},
+//        {ingredientId:5,category:"Dessert",name:"Ice-cream5",description:"Melts in your mouth"},
+//        {ingredientId:6,category:"Dessert",name:"Ice-cream6",description:"Melts in your mouth"},
+//        {ingredientId:7,category:"Dessert",name:"Ice-cream7",description:"Melts in your mouth"},
+//        {ingredientId:8,category:"Dessert",name:"Ice-cream8",description:"Melts in your mouth"},
+//    ]
     
     
     $scope.newIngredient = function(){
         console.log($scope.ingredientsList);
     }
-    
+    $scope.items;
     //get details and open modal functions
-//    $scope.items = ["Apple", "Orange", "Blueberry123"];
-    $scope.items = $scope.ingredientsList;
-    $scope.getDetails = function(ingredientId){
+    EditIngredient.getOrders().then(function(response) {
+//        $scope.result = response.data;
+        $scope.ingredientsList = response.data;
+        $scope.items = response.data
+    }, function(error) {
+        console.log('opsssss' + error);
+    });
+    $scope.items = $scope.result;
+    $scope.getDetails = function(ID){
         $modal.open({
                 templateUrl: 'ingredientDetails.html',
                 controller: ['EditIngredient','$scope', '$uibModalInstance','items', function (EditIngredient,$scope, $instance, items) {
@@ -63,11 +69,10 @@ webApp.controller('InventoryController', ['$scope','$uibModal', function($scope,
                     $scope.items = items;
                     $scope.selectedItem;
                     for(i = 0; i<items.length; i++){
-                        if(items[i].ingredientId == ingredientId){
+                        if(items[i].ID == ID){
                             $scope.selectedItem=items[i];
                         }
                     }
-                    
                     
                     $scope.selected = {
                         item: $scope.items[0]
@@ -99,13 +104,9 @@ webApp.controller('InventoryController', ['$scope','$uibModal', function($scope,
 }]);
 
 webApp.controller('IngredientDetailController', ['EditIngredient', '$scope', function(EditIngredient, $scope) {
-    EditIngredient.getOrders().then(function(response) {
-        $scope.result = response.data;
-    }, function(error) {
-        console.log('opsssss' + error);
-    });
     $scope.currentItem = EditIngredient.currentItem;
-    console.log($scope.currentItem)
+    $scope.master = angular.copy($scope.currentItem);
+    console.log($scope.master);
 }]);
 
 //Suppliers
@@ -155,9 +156,9 @@ webApp.controller('SuppliersController', ['$scope','$uibModal', function($scope,
     }
 }]);
 
-webApp.controller('SuppliersEditController', ['SupplierService', '$scope', function(SupplierService, $scope) {
+webApp.controller('SuppliersEditController', ['SERVER','SupplierService', '$scope', function(SERVER,SupplierService, $scope) {
     console.log('--------Starting Supplier Edit---------');
-    
+    console.log(SERVER.url);
     $scope.tes;
     SupplierService.getOrders().then(function(response) {
         $scope.result = response.data;
@@ -189,7 +190,7 @@ webApp.controller('RecordController', ['$scope', function($scope){
 }]);
 
 //Supplier Service
-webApp.factory('SupplierService', function($http) {
+webApp.factory('SupplierService', function($http,SERVER) {
    
     var o = {
         state: 0,
@@ -201,13 +202,8 @@ webApp.factory('SupplierService', function($http) {
         return $http({
             method: 'GET',
 //            url: ' http://localhost:8080/TestEnterprise-war/webresources/ejb.TestingRestful/createIngredient? ',           //SIYI CHANGE THE URL HERE
-            url:'http://52.230.24.231:8080/TestEnterprise-war/webresources/ejb.IngredientsRestful/createIngredientJSON',
+            url:SERVER.url+'http://52.230.24.231:8080/TestEnterprise-war/webresources/ejb.IngredientsRestful/createIngredientJSON',
             params: {param1: "KangKong"}
-//            param1: "kangkong"
-//            url: 'http://52.187.124.187:8080/OutletManagementSystem-war/api/member/submitForm',
-//            message: {age:999,email:"CantSeeMe@Cena.com",name: "John Cena"}
-//            url: 'http://52.187.124.187:8080/api/multiply/3/4'
-//            url: 'https://openweathermap.org/current'
         }).success(function(data){
             console.log(data);
             o.orders = data;
@@ -217,14 +213,8 @@ webApp.factory('SupplierService', function($http) {
      o.getOrders = function(){
         return $http({
             method: 'GET',
-//            url: ' http://localhost:8080/TestEnterprise-war/webresources/ejb.TestingRestful/createIngredient? ',           //SIYI CHANGE THE URL HERE
-            url:'http://52.230.24.231:8080/TestEnterprise-war/webresources/ejb.IngredientsRestful/getAllIngredients',
+            url:SERVER.url+'/TestEnterprise-war/webresources/ejb.IngredientsRestful/getAllIngredients',
 //            params: {param1: "ULTRAMAN KangKong"}
-//            param1: "kangkong"
-//            url: 'http://52.187.124.187:8080/OutletManagementSystem-war/api/member/submitForm',
-//            message: {age:999,email:"CantSeeMe@Cena.com",name: "John Cena"}
-//            url: 'http://52.187.124.187:8080/api/multiply/3/4'
-//            url: 'https://openweathermap.org/current'
         }).success(function(data){
             console.log(data);
             o.orders = data;
@@ -245,10 +235,8 @@ webApp.factory('SupplierService', function($http) {
     return o;
 })
 
-
-
 //Ingredient Service
-webApp.factory('EditIngredient', function($http) {
+webApp.factory('EditIngredient', function($http,SERVER) {
    
     var o = {
         orders: [],
@@ -258,14 +246,8 @@ webApp.factory('EditIngredient', function($http) {
     o.createOrder = function(){
         return $http({
             method: 'GET',
-//            url: ' http://localhost:8080/TestEnterprise-war/webresources/ejb.TestingRestful/createIngredient? ',           //SIYI CHANGE THE URL HERE
-            url:'http://52.230.24.231:8080/TestEnterprise-war/webresources/ejb.IngredientsRestful/createIngredientJSON',
+            url:SERVER.url+'/TestEnterprise-war/webresources/ejb.IngredientsRestful/createIngredientJSON',
             params: {param1: "KangKong"}
-//            param1: "kangkong"
-//            url: 'http://52.187.124.187:8080/OutletManagementSystem-war/api/member/submitForm',
-//            message: {age:999,email:"CantSeeMe@Cena.com",name: "John Cena"}
-//            url: 'http://52.187.124.187:8080/api/multiply/3/4'
-//            url: 'https://openweathermap.org/current'
         }).success(function(data){
             console.log(data);
             o.orders = data;
@@ -275,14 +257,7 @@ webApp.factory('EditIngredient', function($http) {
      o.getOrders = function(){
         return $http({
             method: 'GET',
-//            url: ' http://localhost:8080/TestEnterprise-war/webresources/ejb.TestingRestful/createIngredient? ',           //SIYI CHANGE THE URL HERE
-            url:'http://52.230.24.231:8080/TestEnterprise-war/webresources/ejb.IngredientsRestful/getAllIngredients',
-//            params: {param1: "ULTRAMAN KangKong"}
-//            param1: "kangkong"
-//            url: 'http://52.187.124.187:8080/OutletManagementSystem-war/api/member/submitForm',
-//            message: {age:999,email:"CantSeeMe@Cena.com",name: "John Cena"}
-//            url: 'http://52.187.124.187:8080/api/multiply/3/4'
-//            url: 'https://openweathermap.org/current'
+            url:SERVER.url+'/TestEnterprise-war/webresources/ejb.IngredientsRestful/getAllIngredients',
         }).success(function(data){
             console.log(data);
             o.orders = data;
@@ -303,6 +278,12 @@ webApp.factory('EditIngredient', function($http) {
     return o;
 })
 
+webApp.factory('SERVER',function(){
+    var o = {
+        url: 'http://52.187.179.134:8080'
+    }
+    return o;
+})
 
 
 
