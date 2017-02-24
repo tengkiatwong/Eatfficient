@@ -29,7 +29,10 @@ webApp.config(['$routeProvider', function($routeProvider) {
         })
         
         //Record Module
-    
+         .when('/records',{
+            templateUrl: 'views/records.html',
+            controller: 'RecordController'
+        })
     
     
         //otherwise
