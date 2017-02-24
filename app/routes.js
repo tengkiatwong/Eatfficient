@@ -27,10 +27,8 @@ webApp.config(['$routeProvider', function($routeProvider) {
             templateUrl: 'views/purchaseOrders.html',
             controller: 'PoController'
         })
-//        .when('/purchaseOrders/:purchaseOrderID',{
-//            templateUrl: 'views/editPurchaseOrder.html',
-//            controller: 'PoEditController'
-//        })
+        
+        //Record Module
     
     
     
