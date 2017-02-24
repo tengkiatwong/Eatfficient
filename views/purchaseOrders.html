@@ -23,7 +23,7 @@
                 </td>
                 <td>{{purchaseOrder.SupplierName}}</td>
                 <td>$ {{purchaseOrder.TotalWorth}}</td>
-                <td>{{purchaseOrder.Status}}</td>
+                <td ng-class="{'pending':purchaseOrder.Status=='pending','cancelled':purchaseOrder.Status=='cancelled','fulfilled':purchaseOrder.Status=='fulfilled'}">{{purchaseOrder.Status}}</td>
             </tr>
         </tbody>
     </table>
@@ -54,10 +54,10 @@
             </div>
             <div class="col-md-4">
                 <h4>Price per Unit</h4>
-                <h4 data-ng-repeat="i in priceArr">{{i}}</h4>
+                <h4 data-ng-repeat="i in priceArr">$ {{i.toFixed(2)}}</h4>
             </div>
         </div>
-        <div style="border-top:1px solid black;font-size:2em">Total Worth: ${{selectedItem.TotalWorth}}</div>
+        <div style="border-top:1px solid black;font-size:2em;padding-bottom:1em">Total Worth: ${{selectedItem.TotalWorth}}</div>
         <div class="form-group">
           <label for="sel1">Edit Status</label>
           <select class="form-control" ng-model="master.Status">

@@ -214,6 +214,7 @@ webApp.controller('PoController', ['$uibModal','PoService','$scope', function($m
                     $scope.ok = function () {
                         PoService.currentItem = $scope.selectedItem;
                         console.log($scope.master.Status);
+                        //call the save function here
                     };
 
                     $scope.cancel = function () {
