@@ -234,6 +234,54 @@ webApp.controller('PoController', ['$uibModal','PoService','$scope', function($m
             });
     }
     
+    //create New Purchase Order
+    $scope.choices = [{id: 'choice1'}, {id: 'choice2'}];
+  
+    $scope.addNewChoice = function() {
+    var newItemNo = $scope.choices.length+1;
+    $scope.choices.push({'id':'choice'+newItemNo});
+    };
+
+    $scope.removeChoice = function() {
+    var lastItem = $scope.choices.length-1;
+    $scope.choices.splice(lastItem);
+    };
+    $scope.currDate = 0;
+    $scope.newIngArr = [];
+    $scope.newQArr = [];
+    $scope.newPArr = [];
+    $scope.newPo = {}; //final sending object
+    $scope.getDate = function(){
+            var today = new Date();
+            var dd = today.getDate();
+            var mm = today.getMonth()+1; //January is 0!
+
+            var yyyy = today.getFullYear();
+            if(dd<10){
+                dd='0'+dd;
+            } 
+            if(mm<10){
+                mm='0'+mm;
+            } 
+            var today = dd+'/'+mm+'/'+yyyy;
+            return today;
+        }
+    $scope.createPo= function(){
+        for(i=0;i<$scope.choices.length;i++){
+            $scope.newIngArr.push($scope.choices[i].ingredient);
+            $scope.newQArr.push($scope.choices[i].quantity);
+            $scope.newPArr.push($scope.choices[i].prices);
+        }
+//        $scope.newPo.SupplierName = $scope.;
+        $scope.newPo.DateCreated = $scope.getDate();
+        $scope.newPo.Ingredients = $scope.newIngArr;
+        $scope.newPo.Quantity = $scope.newQArr;
+        $scope.newPo.Prices = $scope.newPArr;
+        $scope.newPo.Status = "pending";
+        
+        console.log($scope.newPo);
+    }
+    
 }]);
 
 

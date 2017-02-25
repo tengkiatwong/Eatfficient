@@ -27,6 +27,10 @@ webApp.config(['$routeProvider', function($routeProvider) {
             templateUrl: 'views/purchaseOrders.html',
             controller: 'PoController'
         })
+        .when('/purchaseOrders/create',{
+            templateUrl: 'views/createPurchaseOrder.html',
+            controller: 'PoController'
+        })
         
         //Record Module
          .when('/records',{

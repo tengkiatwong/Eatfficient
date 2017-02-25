@@ -1,0 +1,56 @@
+<div class="container">
+<div class="panel panel-default">
+        <div class="panel-heading">
+          <div class="panel-title">
+            
+            <h4><i class="glyphicon glyphicon-wrench" style="padding-right:0.5em"></i> Create New Purchase Order
+            </h4>
+          </div>
+        </div>
+        <div class="panel-body">
+          
+          <form class="form form-vertical" name="newPoForm">
+            <div class="control-group">
+              <label>Supplier Name</label>
+              <div class="controls">
+                <input type="text" class="form-control" ng-model="newPo.SupplierName" required>
+              </div>
+            </div>
+              
+              <div class="control-group">
+              <label>Ingredients Purchased</label>
+            </div> 
+             <fieldset  data-ng-repeat="choice in choices">
+                  <input type="text" ng-model="choice.ingredient" placeholder="Ingredient" required>
+                 <input type="number" ng-model="choice.quantity" placeholder="Quantity" required>
+                  <input type="number" ng-model="choice.prices" placeholder="Unit Price" required>
+                  <button class="remove" ng-show="$last" ng-click="removeChoice()">-</button>
+               </fieldset>
+               <button class="addfields" ng-click="addNewChoice()">Add fields</button>
+<!--              <button class="addfields" ng-click="quickCalculate()">Quick Calculate</button>-->
+              <div>{{choices}}</div>
+            <div class="control-group">
+              <label></label>
+              <div class="controls">
+                <button type="submit" class="btn btn-primary" ng-disabled="newPoForm.$invalid" ng-click="createPo()">
+                  Confirm
+                </button>
+              </div>
+            </div>   
+            
+          </form>
+          
+          
+        </div><!--/panel content-->
+      </div><!--/panel-->
+    
+<style>
+    fieldset{
+    background: #FCFCFC;
+    padding: 16px;
+    border: 1px solid #D5D5D5;
+    }
+    .addfields{
+        margin: 10px 0;
+    }
+</style>
