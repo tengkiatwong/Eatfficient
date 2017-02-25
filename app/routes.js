@@ -33,6 +33,10 @@ webApp.config(['$routeProvider', function($routeProvider) {
             templateUrl: 'views/records.html',
             controller: 'RecordController'
         })
+        .when('/records/create',{
+            templateUrl: 'views/createRecord.html',
+            controller: 'RecordController'
+        })
     
     
         //otherwise

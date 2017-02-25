@@ -1,29 +1,43 @@
 <div class="container">
-<h1>Purchase Order Page</h1>
+<div style="padding-bottom:1em">
+        <div style="font-size:2em;padding-right:1em;display:inline">Employee Reimbusement</div>
+        <div style="display:inline">
+                <a class="btn btn-success" href="#/records/create">
+                    <span class="glyphicon glyphicon-plus"></span>
+                    Create new
+                </a>
+        </div>
+    </div>
 
 <table id="ab" class="table table-hover table-bordered" cellspacing="0" width="100%" style="padding-top:1em">
         <thead class="thead-inverse">
             <tr style="background-color:#3b3e44;color:white">
                 <th style="width:5%">ID</th>
-                <th style="width:10%">Date Created</th>
+                <th style="width:15%">Date Purchased</th>
+                <th style="width:20%">Staff ID</th>
                 <th>Ingredients</th>
-                <th style="width:25%">Supplier</th>
-                <th style="width:10%">Price</th>
+                <th>Quantity</th>
+                <th>Total Amount</th>
                 <th style="width:10%">Status</th>
             </tr>
         </thead>
         <tbody>
-            <tr ng-repeat="purchaseOrder in purchaseOrders" ng-click="getDetails(purchaseOrder.ID)">
-                <td>{{purchaseOrder.ID}}</td>
-                <td>{{purchaseOrder.DateCreated}}</td>
+            <tr ng-repeat="record in records" ng-click="getDetails(record.ID)">
+                <td class="text-center">{{record.ID}}</td>
+                <td>{{record.PurchaseDate}}</td>
+                <td>{{record.StaffID}}</td>
                 <td>
-                    <div data-ng-repeat="i in purchaseOrder.Ingredients">
+                    <div data-ng-repeat="i in record.Ingredients">
                         {{i}}
                     </div>
                 </td>
-                <td>{{purchaseOrder.SupplierName}}</td>
-                <td>$ {{purchaseOrder.TotalWorth}}</td>
-                <td ng-class="{'pending':purchaseOrder.Status=='pending','cancelled':purchaseOrder.Status=='cancelled','fulfilled':purchaseOrder.Status=='fulfilled'}" style="font-size:1.5em;padding-top:1em" class="text-center">{{purchaseOrder.Status}}</td>
+                <td>
+                    <div data-ng-repeat="i in record.Quantity">
+                        {{i}}
+                    </div>
+                </td>
+                <td>{{record.Amount}}</td>
+                <td ng-class="{'pending':record.Status=='pending','fulfilled':record.Status=='paid'}" style="font-size:1.5em;padding-top:1em" class="text-center">{{record.Status}}</td>
             </tr>
         </tbody>
     </table>
@@ -33,37 +47,32 @@
 <!--  Details Modal  -->
 <script type="text/ng-template" id="PoDetails.html">
 	<div class="modal-header" style="background-color:limegreen;color:white">
-        <div style="font-size:2em;display:inline">{{selectedItem.SupplierName}}</div>
+        <div style="font-size:2em;display:inline">Staff ID: {{selectedItem.StaffID}}</div>
         <div class="pull-right" style="font-size:2em">[{{selectedItem.ID}}]</div>
 	</div>
 	<div class="modal-body">
         <div style="font-size:1.5em;border-bottom:1px solid gray">
-            <div style="display:inline">Date Created: {{selectedItem.DateCreated}}</div>
+            <div style="display:inline">Date Created: {{selectedItem.PurchaseDate}}</div>
             <div class="pull-right" ng-class="{'pending':selectedItem.Status=='pending','cancelled':selectedItem.Status=='cancelled','fulfilled':selectedItem.Status=='fulfilled'}">
                 {{selectedItem.Status}}
             </div>
         </div>
         <div class="row">
-            <div class="col-md-4">
+            <div class="col-md-6">
                 <h4>Ingredient</h4>
                 <h4 data-ng-repeat="i in ingredientArr">{{i}}</h4>
             </div>
-            <div class="col-md-4">
+            <div class="col-md-6">
                 <h4>Quantity ({{selectedItem.Unit}})</h4>
                 <h4 data-ng-repeat="i in quantityArr">{{i}}</h4>
             </div>
-            <div class="col-md-4">
-                <h4>Price per Unit</h4>
-                <h4 data-ng-repeat="i in priceArr">$ {{i.toFixed(2)}}</h4>
-            </div>
         </div>
-        <div style="border-top:1px solid black;font-size:2em;padding-bottom:1em">Total Worth: ${{selectedItem.TotalWorth}}</div>
+        <div style="border-top:1px solid black;font-size:2em;padding-bottom:1em">Amount Paid: ${{selectedItem.Amount.toFixed(2)}}</div>
         <div class="form-group">
           <label for="sel1">Edit Status</label>
           <select class="form-control" ng-model="master.Status">
             <option>pending</option>
-            <option>cancelled</option>
-            <option>fulfilled</option>
+            <option>paid</option>
           </select>
         </div>
         </div>

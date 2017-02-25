@@ -22,7 +22,7 @@
                     </div>
                 </td>
                 <td>{{purchaseOrder.SupplierName}}</td>
-                <td>$ {{purchaseOrder.TotalWorth}}</td>
+                <td style="font-size:1.5em;padding-top:1em" class="text-center">$ {{purchaseOrder.TotalWorth}}</td>
                 <td ng-class="{'pending':purchaseOrder.Status=='pending','cancelled':purchaseOrder.Status=='cancelled','fulfilled':purchaseOrder.Status=='fulfilled'}" style="font-size:1.5em;padding-top:1em" class="text-center">{{purchaseOrder.Status}}</td>
             </tr>
         </tbody>

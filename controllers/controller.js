@@ -236,14 +236,97 @@ webApp.controller('PoController', ['$uibModal','PoService','$scope', function($m
     
 }]);
 
-//webApp.controller('PoEditController',['SERVER','PoService','$scope',function(SERVER,PoService,$scope){
-//    $scope.currentItem = PoService.currentItem;
-//    $scope.master = angular.copy($scope.currentItem);
-//}]);
 
-webApp.controller('RecordController', ['$scope', function($scope){
-	$scope.foo1 = 'barzz';
+webApp.controller('RecordController', ['$uibModal','RecordService','$scope', function($modal,RecordService,$scope){
+	$scope.records = RecordService.records;
+    
+    $scope.items = $scope.records;
+    $scope.getDetails = function(PoId){
+        $modal.open({
+                templateUrl: 'PoDetails.html',
+                controller: ['RecordService','$scope', '$uibModalInstance','items', function (RecordService,$scope, $instance, items) {
+                    $scope.items = items;
+                    $scope.selectedItem;
+                    $scope.master;
+                    for(i = 0; i<items.length; i++){
+                        if(items[i].ID == PoId){
+                            $scope.selectedItem=items[i];
+                            $scope.master = angular.copy($scope.selectedItem);
+                        }
+                    }
+                    console.log($scope.master.Status);
+                    $scope.ingredientArr = $scope.selectedItem.Ingredients;
+                    $scope.quantityArr = $scope.selectedItem.Quantity;
+                    console.log($scope.selectedItem);
+                    $scope.selected = {
+                        item: $scope.items[0]
+                    };
+
+                    $scope.ok = function () {
+                        RecordService.currentItem = $scope.selectedItem;
+                        console.log($scope.master.Status);
+                        //call the save function here
+                    };
+
+                    $scope.cancel = function () {
+                        $instance.dismiss('cancel');
+                    };
+                }],
+                size: 'lg',
+                resolve: {
+                    items: function () {
+                        return $scope.items;
+                    }
+                }
+            }).result.then(function (selectedItem) {
+                $scope.selected = {fruit: selectedItem}
+            }, function () {
+                //console.log('Modal dismissed at: ' + new Date());
+            });
+    }
+    
+    //creating new Record
+    $scope.choices = [{id: 'choice1'}, {id: 'choice2'}];
+  
+    $scope.addNewChoice = function() {
+    var newItemNo = $scope.choices.length+1;
+    $scope.choices.push({'id':'choice'+newItemNo});
+    };
+
+    $scope.removeChoice = function() {
+    var lastItem = $scope.choices.length-1;
+    $scope.choices.splice(lastItem);
+    };
+    $scope.newIngArr = [];
+    $scope.newQArr = [];
+    $scope.newRecord = {}; //final sending object
+    $scope.createRecord = function(){
+        for(i=0;i<$scope.choices.length;i++){
+            $scope.newIngArr.push($scope.choices[i].ingredient);
+            $scope.newQArr.push($scope.choices[i].quantity);
+        }
+        $scope.newRecord.Ingredients = $scope.newIngArr;
+        $scope.newRecord.Quantity = $scope.newQArr;
+        console.log($scope.newRecord);
+    }
+
+    
 }]);
+
+webApp.factory('RecordService',function($http,SERVER){
+    var o = {
+        records: [
+            {
+                ID: 5,StaffID:255,Amount:28.80,PurchaseDate:"12/02/2017",Ingredients:["leek","onion","Leaves"],Status:"paid",Quantity:[2,5,6]
+            },
+            {
+                ID: 6,StaffID:282,Amount:50.80,PurchaseDate:"18/05/2017",Ingredients:["leek","lettuce","olives"],Status:"pending",Quantity:[2,5,6]
+            }
+        ]
+    }
+    return o;
+})
+
 
 //Supplier Service
 webApp.factory('SupplierService', function($http,SERVER) {
