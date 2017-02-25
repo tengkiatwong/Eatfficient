@@ -154,6 +154,14 @@ webApp.controller('SuppliersController', ['$scope','$uibModal', function($scope,
                 //console.log('Modal dismissed at: ' + new Date());
             });
     }
+    
+    //create New Supplier
+    $scope.newSupplier = {};
+    $scope.createSupplier = function(){
+        console.log($scope.newSupplier);
+        //send to database
+    }
+    
 }]);
 
 webApp.controller('SuppliersEditController', ['SERVER','SupplierService', '$scope', function(SERVER,SupplierService, $scope) {

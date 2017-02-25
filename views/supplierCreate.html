@@ -1,0 +1,54 @@
+<div class="container">
+<div class="panel panel-default">
+        <div class="panel-heading">
+          <div class="panel-title">
+            
+            <h4><i class="glyphicon glyphicon-wrench" style="padding-right:0.5em"></i> Create New Supplier
+            </h4>
+          </div>
+        </div>
+        <div class="panel-body">
+          
+          <form class="form form-vertical" name="newPoForm">
+            <div class="control-group">
+              <label>Supplier Name</label>
+              <div class="controls">
+                <input type="text" class="form-control" ng-model="newSupplier.SupplierName" required>
+              </div>
+            </div>
+              <div class="control-group">
+              <label>Supplier Type</label>
+              <div class="controls">
+                <input type="text" class="form-control" ng-model="newSupplier.Type" required>
+              </div>
+            </div>
+              <div class="control-group">
+              <label>Contact Number</label>
+              <div class="controls">
+                <input type="number" class="form-control" ng-model="newSupplier.ContactNumber" required>
+              </div>
+            </div>
+              
+              <div class="controls" style="padding-top:1em">
+                <button type="submit" class="btn btn-primary" ng-disabled="newPoForm.$invalid" ng-click="createSupplier()">
+                  Confirm
+                </button>
+              </div>
+            </div>   
+            
+          </form>
+          
+          
+        </div><!--/panel content-->
+      </div><!--/panel-->
+    
+<style>
+    fieldset{
+    background: #FCFCFC;
+    padding: 16px;
+    border: 1px solid #D5D5D5;
+    }
+    .addfields{
+        margin: 10px 0;
+    }
+</style>

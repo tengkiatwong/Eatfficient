@@ -21,6 +21,10 @@ webApp.config(['$routeProvider', function($routeProvider) {
             templateUrl: 'views/supplierEdit.html',
             controller: 'SuppliersEditController'
         })
+        .when('/suppliersCreate',{
+            templateUrl: 'views/supplierCreate.html',
+            controller: 'SuppliersController'
+        })
     
         //purchaseOrder module
         .when('/purchaseOrders',{
