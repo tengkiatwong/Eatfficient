@@ -10,47 +10,47 @@
         </div>
         <div class="panel-body">
           
-          <form class="form form-vertical">
+          <form class="form form-vertical"  name="IngredientForm">
             <div class="control-group">
               <label>Description</label>
               <div class="controls">
-                <input type="text" class="form-control" ng-model="master.Description">
+                <input type="text" class="form-control" ng-model="master.Description"  required>
               </div>
             </div>      
             <div class="control-group">
               <label>Category</label>
               <div class="controls">
-                <input type="text" class="form-control" ng-model="master.Category">
+                <input type="text" class="form-control" ng-model="master.Category"  required>
               </div>
             </div> 
             <div class="control-group">
               <label>Outlet Name</label>
               <div class="controls">
-                <input type="text" class="form-control" ng-model="master.OutletName">
+                <input type="text" class="form-control" ng-model="master.OutletName"  required>
               </div>
             </div>
               <div class="control-group">
               <label>Price ($)</label>
               <div class="controls">
-                <input type="number" class="form-control" ng-model="master.Price">
+                <input type="number" class="form-control" ng-model="master.Price"  required>
               </div>
             </div> 
             <div class="control-group">
               <label>Unit</label>
               <div class="controls">
-                <input type="text" class="form-control" ng-model="master.Unit">
+                <input type="text" class="form-control" ng-model="master.Unit"  required>
               </div>
             </div>
             <div class="control-group">
               <label>Unit Purchase Price</label>
               <div class="controls">
-                <input type="text" class="form-control" ng-model="master.UnitPurchasePrice">
+                <input type="text" class="form-control" ng-model="master.UnitPurchasePrice"  required>
               </div>
             </div>  
             <div class="control-group">
               <label></label>
               <div class="controls">
-                <button type="submit" class="btn btn-primary" ng-click="updateSupplier()">
+                <button type="submit" class="btn btn-primary" ng-click="updateSupplier()" ng-disabled="IngredientForm.$invalid">
                   Confirm
                 </button>
               </div>

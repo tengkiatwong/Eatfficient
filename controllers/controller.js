@@ -307,6 +307,7 @@ webApp.controller('RecordController', ['$uibModal','RecordService','$scope', fun
         }
         $scope.newRecord.Ingredients = $scope.newIngArr;
         $scope.newRecord.Quantity = $scope.newQArr;
+        $scope.newRecord.Status = "pending";
         console.log($scope.newRecord);
     }
 
