@@ -1,28 +1,124 @@
-<div class="container">
-	<div class="row">
-		<div class="col-lg-12">
-			<h1 class="title">Homepage</h1>
-			<br/>
-			<a href="#" class="btn btn-success" ng-click="open()" tooltip="Super easy!">Open Modal</a>
-			<br/>
-			<br/>
-			<div ng-if="selected.fruit" class="alert alert-info">{{selected.fruit}}</div>
-		</div>
-	</div>
+<div class="container-fluid">
+   <div class="row">
+       <div id="landing-wrapper" class="mid">
+            <h1>OutBackers</h1>
+       </div>
+   </div>
+    <div class="row" style="padding-top:1em;padding-left:2em">
+        <a href="#/inventory">
+            <div class="col-md-3 zoomin frame">
+                <img id="inventory" src="/assets/inventory.png">
+                <h2 class="textOver">Inventory</h2>
+            </div>
+        </a>
+        <a href="#/suppliers">
+             <div class="col-md-3 zoomin frame">
+                <img id="inventory" src="/assets/supplier.jpg">
+                 <h2 class="textOver">Suppliers</h2>
+            </div>
+        </a>
+        <a href="#/purchaseOrders">
+             <div class="col-md-3 zoomin frame">
+                <img id="inventory" src="/assets/PO.jpg">
+                 <h2 class="textOver">Purchase Orders</h2>
+            </div>
+        </a>
+        <a href="#/records">
+             <div class="col-md-3 zoomin frame">
+                <img id="inventory" src="/assets/record.jpg">
+                 <h2 class="textOver">Records</h2>
+            </div>
+        </a>
+    </div>
+    
+    <br>
+    
+    <div class="row">
+        <div class="col-md-6">
+            <a href="#">
+                <div class="bannerButton mm">
+                    <h2>Menu Management</h2>
+                </div>
+            </a>
+        </div>
+        <div class="col-md-6">
+            <a href="#">
+                <div class="bannerButton mm">
+                    <h2>Table Management</h2>
+                </div>
+            </a>
+        </div>
+    </div>
 </div>
 
-<script type="text/ng-template" id="ingredientsList.html">
-	<div class="modal-header">
-		<h3 class="modal-title">Select Fruit</h3>
-	</div>
-	<div class="modal-body">
-		<span class="btn-group">
-			<a ng-repeat="item in items" ng-click="selected.item = item"
-			   class="btn {{item == selected.item ? 'btn-primary' : 'btn-default' }}">{{ item }}</a>
-		</span>
-	</div>
-	<div class="modal-footer">
-		<button class="btn btn-success" ng-click="ok()">OK</button>
-		<button class="btn btn-default" ng-click="cancel()">Cancel</button>
-	</div>
-</script>
+
+
+
+
+
+<style>
+    
+    .bannerButton {
+        background-color:blue;
+        height: 8em;
+    }
+    
+    .bannerButton h2  {
+        color:darkgrey;
+        position: absolute;
+      top: 15%;
+      left: 10%;
+    }
+    
+    .mm {
+        display:table;
+        width:100%;
+        background: linear-gradient( rgba(255, 255, 255, 0.8), rgba(255,255, 255, 0.8) ), url('/assets/banner.jpg');
+        background-position:center top;
+    }
+    
+    #landing-wrapper {
+        display:table;
+        width:100%;
+        background: linear-gradient( rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5) ), url('/assets/banner.jpg');
+        background-position:center top;
+        height:265px;
+    }
+    .mid h1 {
+      font-family: 'Roboto', sans-serif;
+      font-weight: 900;
+      color: white;
+      text-transform: uppercase;
+      margin: 0;
+      position: absolute;
+      top: 25%;
+      left: 50%;
+      font-size: 6rem;
+      transform: translate(-50%, -50%);
+    }
+    .textOver {
+      font-family: 'Roboto', sans-serif;
+      font-weight: 250;
+      color: white;
+      margin: 0;
+      position: absolute;
+      top: 25%;
+      left: 50%;
+      font-size: 3.5rem;
+      transform: translate(-50%, -50%);
+      -webkit-filter: brightness(1) !important;
+      filter: brightness(1) !important;
+    }
+    #inventory {
+        -webkit-filter: brightness(0.5);
+        filter: brightness(0.5);
+    }
+    
+    
+    
+    
+    .frame { height: 200px; width: 300px; overflow: hidden; } 
+    .zoomin img { height: 200px; width: 300px; -webkit-transition: all 0.5s ease; -moz-transition: all 0.5s ease; -ms-transition: all 0.5s ease; transition: all 0.5s ease; } 
+    .zoomin img:hover { width: 350px; height: 250px; }
+
+</style>
