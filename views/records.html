@@ -1,12 +1,21 @@
-<div class="container">
+<div class="container" style="padding-top:2em">
 <div style="padding-bottom:1em">
-        <div style="font-size:2em;padding-right:1em;display:inline">Employee Reimbusement</div>
+        <div style="font-size:2em;padding-right:1em;display:inline"><i class="glyphicon glyphicon-credit-card"></i> Employee Reimbusement</div>
         <div style="display:inline">
                 <a class="btn btn-success" href="#/records/create">
                     <span class="glyphicon glyphicon-plus"></span>
                     Create new
                 </a>
         </div>
+         <div class="span12 pull-right search-form"  style="display:inline;padding-top:0.7em">
+            <form id="custom-search-form" class="form-search form-horizontal pull-right">
+                <div class="input-append span12">
+                    <input type="text" class="search-query" placeholder="Search">
+                    <button type="submit" class="btn"><i class="glyphicon glyphicon-search"></i></button>
+                </div>
+            </form>
+        </div>
+
     </div>
 
 <table id="ab" class="table table-hover table-bordered" cellspacing="0" width="100%" style="padding-top:1em">
@@ -16,28 +25,22 @@
                 <th style="width:15%">Date Purchased</th>
                 <th style="width:20%">Staff ID</th>
                 <th>Ingredients</th>
-                <th>Quantity</th>
                 <th>Total Amount</th>
                 <th style="width:10%">Status</th>
             </tr>
         </thead>
         <tbody>
             <tr ng-repeat="record in records" ng-click="getDetails(record.ID)">
-                <td class="text-center">{{record.ID}}</td>
-                <td>{{record.PurchaseDate}}</td>
-                <td>{{record.StaffID}}</td>
+                <td class="text-center" style="padding-top:2em">{{record.ID}}</td>
+                <td class="text-center" style="padding-top:2em">{{record.PurchaseDate}}</td>
+                <td class="text-center" style="padding-top:2em">{{record.StaffID}}</td>
                 <td>
                     <div data-ng-repeat="i in record.Ingredients">
                         {{i}}
                     </div>
                 </td>
-                <td>
-                    <div data-ng-repeat="i in record.Quantity">
-                        {{i}}
-                    </div>
-                </td>
-                <td>{{record.Amount}}</td>
-                <td ng-class="{'pending':record.Status=='pending','fulfilled':record.Status=='paid'}" style="font-size:1.5em;padding-top:1em" class="text-center">{{record.Status}}</td>
+                <td class="text-center" style="font-weight:bold;padding-top:1.8em;font-size:1.2em">$ {{record.Amount.toFixed(2)}}</td>
+                <td ng-class="{'pending':record.Status=='pending','fulfilled':record.Status=='paid'}" style="font-size:1em;padding-top:2em" class="text-center">{{record.Status}}</td>
             </tr>
         </tbody>
     </table>
@@ -53,8 +56,8 @@
 	<div class="modal-body">
         <div style="font-size:1.5em;border-bottom:1px solid gray">
             <div style="display:inline">Date Created: {{selectedItem.PurchaseDate}}</div>
-            <div class="pull-right" ng-class="{'pending':selectedItem.Status=='pending','cancelled':selectedItem.Status=='cancelled','fulfilled':selectedItem.Status=='fulfilled'}">
-                {{selectedItem.Status}}
+            <div class="pull-right" ng-class="{'pendingw':selectedItem.Status=='pending','cancelledw':selectedItem.Status=='cancelled','fulfilledw':selectedItem.Status=='paid'}">
+                {{selectedItem.Status.charAt(0).toUpperCase()+ selectedItem.Status.slice(1)}}
             </div>
         </div>
         <div class="row">
@@ -102,5 +105,51 @@
     .fulfilled {
         color: white;
         background-color: #3fd112
+    }
+    .pendingw {
+        color: orange;
+    }
+    .cancelledw {
+        color:red;
+    }
+    .fulfilledw {
+        color: forestgreen;
+    }
+     #custom-search-form {
+        margin:0;
+        margin-top: 5px;
+        padding: 0;
+    }
+ 
+    #custom-search-form .search-query {
+        padding-right: 3px;
+        padding-right: 4px \9;
+        padding-left: 3px;
+        padding-left: 4px \9;
+        /* IE7-8 doesn't have border-radius, so don't indent the padding */
+ 
+        margin-bottom: 0;
+        -webkit-border-radius: 3px;
+        -moz-border-radius: 3px;
+        border-radius: 3px;
+    }
+ 
+    #custom-search-form button {
+        border: 0;
+        background: none;
+        /** belows styles are working good */
+        padding: 2px 5px;
+        margin-top: 2px;
+        position: relative;
+        left: -28px;
+        /* IE7-8 doesn't have border-radius, so don't indent the padding */
+        margin-bottom: 0;
+        -webkit-border-radius: 3px;
+        -moz-border-radius: 3px;
+        border-radius: 3px;
+    }
+ 
+    .search-query:focus + button {
+        z-index: 3;   
     }
 </style>

@@ -1,11 +1,19 @@
-<div class="container">
+<div class="container" style="padding-top:2em">
     <div>
-        <div style="font-size:2em;padding-right:1em;display:inline">Suppliers</div>
+        <div style="font-size:2em;padding-right:1em;display:inline"><i class="glyphicon glyphicon-transfer"></i> &nbsp;Suppliers</div>
         <div style="display:inline">
                 <a class="btn btn-success" href="#/suppliersCreate">
                     <span class="glyphicon glyphicon-plus"></span>
                     Create new
                 </a>
+        </div>
+         <div class="span12 pull-right search-form"  style="display:inline;padding-top:0.7em">
+            <form id="custom-search-form" class="form-search form-horizontal pull-right">
+                <div class="input-append span12">
+                    <input type="text" class="search-query" placeholder="Search">
+                    <button type="submit" class="btn"><i class="glyphicon glyphicon-search"></i></button>
+                </div>
+            </form>
         </div>
     </div>
     
@@ -51,3 +59,43 @@
 	</div>
 </script>
 <!-- End Details Modal  -->
+
+<style>
+    #custom-search-form {
+        margin:0;
+        margin-top: 5px;
+        padding: 0;
+    }
+ 
+    #custom-search-form .search-query {
+        padding-right: 3px;
+        padding-right: 4px \9;
+        padding-left: 3px;
+        padding-left: 4px \9;
+        /* IE7-8 doesn't have border-radius, so don't indent the padding */
+ 
+        margin-bottom: 0;
+        -webkit-border-radius: 3px;
+        -moz-border-radius: 3px;
+        border-radius: 3px;
+    }
+ 
+    #custom-search-form button {
+        border: 0;
+        background: none;
+        /** belows styles are working good */
+        padding: 2px 5px;
+        margin-top: 2px;
+        position: relative;
+        left: -28px;
+        /* IE7-8 doesn't have border-radius, so don't indent the padding */
+        margin-bottom: 0;
+        -webkit-border-radius: 3px;
+        -moz-border-radius: 3px;
+        border-radius: 3px;
+    }
+ 
+    .search-query:focus + button {
+        z-index: 3;   
+    }
+</style>

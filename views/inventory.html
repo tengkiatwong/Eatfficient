@@ -19,7 +19,18 @@
         </button>
 	</div>
 -->
-    <div style="font-size:2em">Inventory</div>
+    <div style="padding-top:2em">
+        <div style="font-size:2em;padding-right:1em;display:inline"><span class="glyphicon glyphicon-tags"></span>&nbsp;&nbsp;Inventory </div>
+         <div class="span12 pull-right search-form"  style="display:inline;padding-top:0.7em">
+            <form id="custom-search-form" class="form-search form-horizontal pull-right">
+                <div class="input-append span12">
+                    <input type="text" class="search-query" placeholder="Search">
+                    <button type="submit" class="btn"><i class="glyphicon glyphicon-search"></i></button>
+                </div>
+            </form>
+        </div>
+
+    </div>
     <!--spacer-->
     <div style="height:1em"></div>
     <!--spacer-->
@@ -47,20 +58,42 @@
 
 <!--  Details Modal  -->
 <script type="text/ng-template" id="ingredientDetails.html">
-	<div class="modal-header" style="background-color:limegreen">
-		<h3 class="modal-title" style="display:inline;color:white">{{selectedItem.Name}}</h3>
+	<div class="modal-header" style="background-color:#0d3e99">
+		<h3 class="modal-title" style="display:inline;color:white;">{{selectedItem.Name}}</h3>
         <h4 class="pull-right" style="color:white">Ingredient ID: {{selectedItem.ID}}</h4>
 	</div>
 	<div class="modal-body">
-        <h3>Category: {{selectedItem.Category}}</h3>
-        <h3>Description: {{selectedItem.Description}}</h3>
-        <h3>OutLet Name: {{selectedItem.OutletName}}</h3>
-        <h3>Price: {{selectedItem.Price}}</h3>
-        <h3>Unit: {{selectedItem.Unit}}</h3>
-        <h3>Unit Purchase Price: {{selectedItem.UnitPurchasePrice}}</h3>
+<!--
+        <ul class="list-group" style="font-size:1.5em">
+          <li class="list-group-item">Category:{{selectedItem.Category}}</strong></li>
+          <li class="list-group-item">Description: {{selectedItem.Description}}</li>
+          <li class="list-group-item">Unit: {{selectedItem.Unit}}</li>
+            <li class="list-group-item">Unit Purchase Price: {{selectedItem.UnitPurchasePrice}}</li>
+        </ul>
+-->
+        <table class="table table-hover"> 
+            <tbody style="font-size:1.5em">
+    				<tr>
+    					<td style="width:20%">Category:</td>
+    					<td>{{selectedItem.Category}}</td>
+    				</tr>
+                    <tr>
+    					<td style="">Description:</td>
+    					<td>{{selectedItem.Description}}</td>
+    				</tr>
+                    <tr>
+    					<td style="">Unit:</td>
+    					<td>{{selectedItem.Unit}}</td>
+    				</tr>
+                    <tr>
+    					<td style="">Purchase Price:</td>
+    					<td>$ {{selectedItem.UnitPurchasePrice.toFixed(2)}}</td>
+    				</tr>
+            </tbody>
+        </table>
+        
 	</div>
 	<div class="modal-footer">
-<!--		<button class="btn btn-success" ng-click="ok()">OK</button>-->
         <a type="button" class="btn btn-primary" ng-click="ok()" href="#/inventory/{{selectedItem.ID}}" >
             <span class="glyphicon glyphicon-pencil"></span> Edit
         </a>
@@ -68,4 +101,42 @@
 	</div>
 </script>
 
-
+<style>
+    #custom-search-form {
+        margin:0;
+        margin-top: 5px;
+        padding: 0;
+    }
+ 
+    #custom-search-form .search-query {
+        padding-right: 3px;
+        padding-right: 4px \9;
+        padding-left: 3px;
+        padding-left: 4px \9;
+        /* IE7-8 doesn't have border-radius, so don't indent the padding */
+ 
+        margin-bottom: 0;
+        -webkit-border-radius: 3px;
+        -moz-border-radius: 3px;
+        border-radius: 3px;
+    }
+ 
+    #custom-search-form button {
+        border: 0;
+        background: none;
+        /** belows styles are working good */
+        padding: 2px 5px;
+        margin-top: 2px;
+        position: relative;
+        left: -28px;
+        /* IE7-8 doesn't have border-radius, so don't indent the padding */
+        margin-bottom: 0;
+        -webkit-border-radius: 3px;
+        -moz-border-radius: 3px;
+        border-radius: 3px;
+    }
+ 
+    .search-query:focus + button {
+        z-index: 3;   
+    }
+</style>

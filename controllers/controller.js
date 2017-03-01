@@ -110,13 +110,24 @@ webApp.controller('IngredientDetailController', ['EditIngredient', '$scope', fun
 }]);
 
 //Suppliers
-webApp.controller('SuppliersController', ['$scope','$uibModal', function($scope,$modal){
+webApp.controller('SuppliersController', ['SupplierService','$scope','$uibModal', function(SupplierService,$scope,$modal){
 
-	$scope.suppliers = [
-        {supplierId:1,name:"Fresh Steak Gods",contactNumber:91239124,type:"Steak"},
-        {supplierId:2,name:"VegeFarm",contactNumber:99999999,type:"Vegetables"}
-    ];
+//	$scope.suppliers = [
+//        {supplierId:1,name:"Fresh Steak Gods",contactNumber:91239124,type:"Steak"},
+//        {supplierId:2,name:"VegeFarm",contactNumber:99999999,type:"Vegetables"}
+//    ];
+    $scope.suppliers;
+    SupplierService.getOrders().then(function(response) {
+//        $scope.result = response.data;
+        $scope.ingredientsList = response.data;
+        $scope.items = response.data
+        $scope.suppliers = response.data;
+    }, function(error) {
+        console.log('opsssss' + error);
+    });
     $scope.items = $scope.suppliers;
+    
+    //modal
     $scope.getDetails = function(supplierId){
         $modal.open({
                 templateUrl: 'supplierDetails.html',
@@ -159,27 +170,29 @@ webApp.controller('SuppliersController', ['$scope','$uibModal', function($scope,
     $scope.newSupplier = {};
     $scope.createSupplier = function(){
         console.log($scope.newSupplier);
+        SupplierService.createSupplier($scope.newSupplier);
         //send to database
     }
     
 }]);
 
 webApp.controller('SuppliersEditController', ['SERVER','SupplierService', '$scope', function(SERVER,SupplierService, $scope) {
-    SupplierService.getOrders().then(function(response) {
-        $scope.result = response.data;
-    }, function(error) {
-        console.log('opsssss' + error);
-    });
+//    SupplierService.getOrders().then(function(response) {
+//        $scope.result = response.data;
+//    }, function(error) {
+//        console.log('opsssss' + error);
+//    });
     $scope.currentItem = SupplierService.currentItem;
-    $scope.supplier = {
-        supplierId: $scope.currentItem.supplierId,
-        name: $scope.currentItem.name,
-        contactNumber: $scope.currentItem.contactNumber,
-        type: $scope.currentItem.type
-    }
+    $scope.newMaster = {};
+   
+
     
     $scope.updateSupplier = function(){
-        console.log($scope.supplier);
+         $scope.newMaster.SupplierName = $scope.currentItem.name;
+        $scope.newMaster.ContactNumber = $scope.currentItem.contactNumber;
+        $scope.newMaster.Type =  $scope.currentItem.type;
+        $scope.newMaster.SupplierId = $scope.currentItem.supplierId;
+        SupplierService.editSupplier($scope.newMaster);
         // $http request send $scope.supplier
         //redirect
     }
@@ -187,6 +200,12 @@ webApp.controller('SuppliersEditController', ['SERVER','SupplierService', '$scop
 
 webApp.controller('PoController', ['$uibModal','PoService','$scope', function($modal,PoService,$scope){
 	$scope.purchaseOrders = PoService.purchaseOrders;
+    $scope.callRestService= function() {
+      $http({method: 'GET', url: '/someUrl'}).
+        success(function(data, status, headers, config) {
+             $scope.results.push(data);  //retrieve results and add to existing results
+        })
+    }
     for(i=0;i<$scope.purchaseOrders.length;i++){
         var totalWorth = 0;
         var qArr = $scope.purchaseOrders[i].Quantity;
@@ -391,15 +410,15 @@ webApp.factory('SupplierService', function($http,SERVER) {
     var o = {
         state: 0,
         orders: [],
-        currentItem: {supplierId:2,name:"VegeFarm",contactNumber:99999999,type:"Vegetables"}
     };
     
-    o.createOrder = function(){
+    o.createSupplier = function(dataObj){
+        console.log(dataObj);
         return $http({
             method: 'GET',
 //            url: ' http://localhost:8080/TestEnterprise-war/webresources/ejb.TestingRestful/createIngredient? ',           //SIYI CHANGE THE URL HERE
-            url:SERVER.url+'http://52.230.24.231:8080/TestEnterprise-war/webresources/ejb.IngredientsRestful/createIngredientJSON',
-            params: {param1: "KangKong"}
+            url:SERVER.url+'/TestEnterprise-war/webresources/ejb.SupplierRestful/createSupplier',
+            params: dataObj,
         }).success(function(data){
             console.log(data);
             o.orders = data;
@@ -409,7 +428,7 @@ webApp.factory('SupplierService', function($http,SERVER) {
      o.getOrders = function(){
         return $http({
             method: 'GET',
-            url:SERVER.url+'/TestEnterprise-war/webresources/ejb.IngredientsRestful/getAllIngredients',
+            url:SERVER.url+'/TestEnterprise-war/webresources/ejb.SupplierRestful/getAllSuppliers',
 //            params: {param1: "ULTRAMAN KangKong"}
         }).success(function(data){
             console.log(data);
@@ -417,16 +436,18 @@ webApp.factory('SupplierService', function($http,SERVER) {
         });
     }
      
-     //remove order
-     o.remove = function(order){
-         o.orders.splice(o.orders.indexOf(order),1);
-         console.log("spliced");
-     } 
-     
-     o.newOrder = function(order){
-         console.log(order);
-         // return $http
-     }
+     o.editSupplier = function(dataObj){
+         console.log("---");
+         console.log(dataObj);
+        return $http({
+            method: 'GET',
+            url:SERVER.url+'/TestEnterprise-war/webresources/ejb.SupplierRestful/editSupplier',
+            params: dataObj
+        }).success(function(data){
+            console.log(data);
+            o.orders = data;
+        });
+    }
      
     return o;
 })
@@ -439,21 +460,13 @@ webApp.factory('EditIngredient', function($http,SERVER) {
         currentItem: {ingredientId:8,category:"Dessert",name:"Ice-cream8",description:"Melts in your mouth"}
     };
     
-    o.createOrder = function(){
-        return $http({
-            method: 'GET',
-            url:SERVER.url+'/TestEnterprise-war/webresources/ejb.IngredientsRestful/createIngredientJSON',
-            params: {param1: "KangKong"}
-        }).success(function(data){
-            console.log(data);
-            o.orders = data;
-        });
-    }
-    
      o.getOrders = function(){
+        console.log("getAllIngredients");
         return $http({
             method: 'GET',
             url:SERVER.url+'/TestEnterprise-war/webresources/ejb.IngredientsRestful/getAllIngredients',
+//            params: {name:"Supersonic one punch man"}
+//            params: {id: 1001}
         }).success(function(data){
             console.log(data);
             o.orders = data;
@@ -476,6 +489,7 @@ webApp.factory('EditIngredient', function($http,SERVER) {
 
 //PurchaseOrder Service
 webApp.factory('PoService',function($http,SERVER){
+    //            url:SERVER.url+'/TestEnterprise-war/webresources/ejb.PurchaseOrder/getPurchaseOrder',
     var o = {
         currentItem:{},
         purchaseOrders: [
@@ -496,6 +510,8 @@ webApp.factory('PoService',function($http,SERVER){
     
     return o;
 })
+
+
 
 
 
