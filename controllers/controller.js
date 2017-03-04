@@ -110,7 +110,7 @@ webApp.controller('IngredientDetailController', ['EditIngredient', '$scope', fun
 }]);
 
 //Suppliers
-webApp.controller('SuppliersController', ['SupplierService','$scope','$uibModal', function(SupplierService,$scope,$modal){
+webApp.controller('SuppliersController', ['$window','SupplierService','$scope','$uibModal', function($window,SupplierService,$scope,$modal){
 
 //	$scope.suppliers = [
 //        {supplierId:1,name:"Fresh Steak Gods",contactNumber:91239124,type:"Steak"},
@@ -172,11 +172,13 @@ webApp.controller('SuppliersController', ['SupplierService','$scope','$uibModal'
         console.log($scope.newSupplier);
         SupplierService.createSupplier($scope.newSupplier);
         //send to database
+        $window.location.href = '#/suppliers';
+        SupplierService.getOrders()
     }
     
 }]);
 
-webApp.controller('SuppliersEditController', ['SERVER','SupplierService', '$scope', function(SERVER,SupplierService, $scope) {
+webApp.controller('SuppliersEditController', ['$window','SERVER','SupplierService', '$scope', function($window,SERVER,SupplierService, $scope) {
 //    SupplierService.getOrders().then(function(response) {
 //        $scope.result = response.data;
 //    }, function(error) {
@@ -193,8 +195,15 @@ webApp.controller('SuppliersEditController', ['SERVER','SupplierService', '$scop
         $scope.newMaster.Type =  $scope.currentItem.type;
         $scope.newMaster.SupplierId = $scope.currentItem.supplierId;
         SupplierService.editSupplier($scope.newMaster);
-        // $http request send $scope.supplier
         //redirect
+        $window.location.href = '#/suppliers';
+    }
+    
+    $scope.deleteSupplier = function(){
+        $scope.deleteMessage = {};
+        $scope.deleteMessage.ID = $scope.currentItem.supplierId;
+        console.log($scope.deleteMessage);
+        //SupplierService.deleteSupplier($scope.deleteMessage);
     }
 }]);
 
@@ -420,7 +429,7 @@ webApp.factory('SupplierService', function($http,SERVER) {
             url:SERVER.url+'/TestEnterprise-war/webresources/ejb.SupplierRestful/createSupplier',
             params: dataObj,
         }).success(function(data){
-            console.log(data);
+            //console.log(data);
             o.orders = data;
         });
     }
@@ -441,6 +450,20 @@ webApp.factory('SupplierService', function($http,SERVER) {
          console.log(dataObj);
         return $http({
             method: 'GET',
+            url:SERVER.url+'/TestEnterprise-war/webresources/ejb.SupplierRestful/editSupplier',
+            params: dataObj
+        }).success(function(data){
+            console.log(data);
+            o.orders = data;
+        });
+    }
+     
+     o.deleteSupplier = function(dataObj){
+         console.log("---");
+         console.log(dataObj);
+        return $http({
+            method: 'GET',
+            //change URL to delete
             url:SERVER.url+'/TestEnterprise-war/webresources/ejb.SupplierRestful/editSupplier',
             params: dataObj
         }).success(function(data){

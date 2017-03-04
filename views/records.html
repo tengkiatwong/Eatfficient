@@ -82,7 +82,7 @@
 	</div>
 <!--    <div style="">{{selectedItem.TotalWorth}}</div>-->
 	<div class="modal-footer">
-<!--		<button class="btn btn-success" ng-click="ok()">OK</button>-->
+        <button ng-show="selectedItem.Status=='paid'" class="btn btn-danger pull-left" ng-click="deleteRecord()">Delete</button>
         <a type="button" id="editButton" class="btn btn-primary" ng-click="ok()">
             <span class="glyphicon glyphicon-pencil"></span> Edit
         </a>
