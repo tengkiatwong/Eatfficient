@@ -38,14 +38,26 @@
     <table id="ab" class="table table-hover table-bordered" cellspacing="0" width="100%" style="padding-top:1em">
         <thead class="thead-inverse">
             <tr style="background-color:#3b3e44;color:white">
-                <th style="width:5%">ID</th>
-                <th style="width:23%">Name</th>
-                <th>Description</th>
-                <th style="width:15%">Category</th>
+                <th style="width:5%" ng-click="sortType = 'ID'; sortReverse = !sortReverse">ID
+                    <span ng-show="sortType == 'ID' && !sortReverse" class="glyphicon glyphicon-chevron-up"></span>
+                    <span ng-show="sortType == 'ID' && sortReverse" class="glyphicon glyphicon-chevron-down"></span>
+                </th>
+                <th style="width:23%" ng-click="sortType = 'Name'; sortReverse = !sortReverse">Name
+                    <span ng-show="sortType == 'Name' && !sortReverse" class="glyphicon glyphicon-chevron-up"></span>
+                    <span ng-show="sortType == 'Name' && sortReverse" class="glyphicon glyphicon-chevron-down"></span>
+                </th>
+                <th ng-click="sortType = 'Description'; sortReverse = !sortReverse">Description
+                    <span ng-show="sortType == 'Description' && !sortReverse" class="glyphicon glyphicon-chevron-up"></span>
+                    <span ng-show="sortType == 'Description' && sortReverse" class="glyphicon glyphicon-chevron-down"></span>
+                </th>
+                <th style="width:15%" ng-click="sortType = 'Category'; sortReverse = !sortReverse">Category
+                    <span ng-show="sortType == 'Category' && !sortReverse" class="glyphicon glyphicon-chevron-up"></span>
+                    <span ng-show="sortType == 'Category' && sortReverse" class="glyphicon glyphicon-chevron-down"></span>
+                </th>
             </tr>
         </thead>
         <tbody>
-            <tr ng-repeat="ingredient in ingredientsList | filter:searchText" ng-click="getDetails(ingredient.ID)">
+            <tr ng-repeat="ingredient in ingredientsList | filter:searchText | orderBy:sortType:sortReverse" ng-click="getDetails(ingredient.ID)">
                 <td>{{ingredient.ID}}</td>
                 <td>{{ingredient.Name}}</td>
                 <td>{{ingredient.Description}}</td>

@@ -35,6 +35,8 @@ webApp.controller('HomepageController', ['$scope', '$uibModal', function($scope,
 }]);
 
 webApp.controller('InventoryController', ['EditIngredient','$scope','$uibModal', function(EditIngredient,$scope,$modal){
+    $scope.sortType     = 'ID'; // set the default sort type
+    $scope.sortReverse  = false;  // set the default sort order
 	$scope.foo = 'bar';
 //    $scope.ingredientsList = [
 //        {ingredientId:1,category:"Appetizer",name:"French Fries",description:"Awesome Tasting Fries"},
@@ -111,7 +113,8 @@ webApp.controller('IngredientDetailController', ['EditIngredient', '$scope', fun
 
 //Suppliers
 webApp.controller('SuppliersController', ['$window','SupplierService','$scope','$uibModal', function($window,SupplierService,$scope,$modal){
-
+    $scope.sortType     = 'ID'; // set the default sort type
+    $scope.sortReverse  = false;  // set the default sort order
 //	$scope.suppliers = [
 //        {supplierId:1,name:"Fresh Steak Gods",contactNumber:91239124,type:"Steak"},
 //        {supplierId:2,name:"VegeFarm",contactNumber:99999999,type:"Vegetables"}
@@ -211,6 +214,8 @@ webApp.controller('SuppliersEditController', ['$window','SERVER','SupplierServic
 }]);
 
 webApp.controller('PoController', ['$window','$uibModal','PoService','$scope', function($window,$modal,PoService,$scope){
+        $scope.sortType     = 'ID'; // set the default sort type
+        $scope.sortReverse  = false;  // set the default sort order
 	    $scope.purchaseOrders;
     
         PoService.getOrders().then(function(response) {
@@ -381,6 +386,8 @@ webApp.controller('PoController', ['$window','$uibModal','PoService','$scope', f
 
 
 webApp.controller('RecordController', ['$window','$uibModal','RecordService','$scope', function($window,$modal,RecordService,$scope){
+    $scope.sortType     = 'ID'; // set the default sort type
+    $scope.sortReverse  = false;  // set the default sort order
 	$scope.records;
     $scope.items;
     RecordService.getOrders().then(function(response) {

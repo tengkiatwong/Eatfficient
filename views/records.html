@@ -21,16 +21,39 @@
 <table id="ab" class="table table-hover table-bordered" cellspacing="0" width="100%" style="padding-top:1em">
         <thead class="thead-inverse">
             <tr style="background-color:#3b3e44;color:white">
-                <th style="width:5%">ID</th>
-                <th style="width:15%">Date Purchased</th>
-                <th style="width:20%">Staff ID</th>
-                <th>Ingredients</th>
-                <th>Total Amount</th>
-                <th style="width:10%">Status</th>
+                <th style="width:5%" ng-click="sortType = 'ID'; sortReverse = !sortReverse">ID
+                    <span ng-show="sortType == 'ID' && !sortReverse" class="glyphicon glyphicon-chevron-up"></span>
+                    <span ng-show="sortType == 'ID' && sortReverse" class="glyphicon glyphicon-chevron-down"></span>
+                </th>
+                
+                <th style="width:15%" ng-click="sortType = 'DateCreated'; sortReverse=!sortReverse">Date Purchased
+                <span ng-show="sortType == 'DateCreated' && !sortReverse" class="glyphicon glyphicon-chevron-up"></span>
+                    <span ng-show="sortType == 'DateCreated' && sortReverse" class="glyphicon glyphicon-chevron-down"></span>
+                </th>
+                
+                <th style="width:20%" ng-click="sortType = 'StaffID'; sortReverse=!sortReverse">Staff ID
+                <span ng-show="sortType == 'StaffID' && sortReverse" class="glyphicon glyphicon-chevron-up"></span>
+                    <span ng-show="sortType == 'StaffID' && !sortReverse" class="glyphicon glyphicon-chevron-down"></span>
+                </th>
+                
+                <th ng-click="sortType = 'Ingredient'; sortReverse=!sortReverse">Ingredients
+                <span ng-show="sortType == 'Ingredient' && !sortReverse" class="glyphicon glyphicon-chevron-up"></span>
+                    <span ng-show="sortType == 'Ingredient' && sortReverse" class="glyphicon glyphicon-chevron-down"></span>
+                </th>
+                
+                <th ng-click="sortType = 'AMount'; sortReverse=!sortReverse">Total Amount
+                <span ng-show="sortType == 'AMount' && !sortReverse" class="glyphicon glyphicon-chevron-up"></span>
+                    <span ng-show="sortType == 'AMount' && sortReverse" class="glyphicon glyphicon-chevron-down"></span>
+                </th>
+                
+                <th style="width:10%" ng-click="sortType = 'Status'; sortReverse=!sortReverse">Status
+                <span ng-show="sortType == 'Status' && !sortReverse" class="glyphicon glyphicon-chevron-up"></span>
+                    <span ng-show="sortType == 'Status' && sortReverse" class="glyphicon glyphicon-chevron-down"></span>
+                </th>
             </tr>
         </thead>
         <tbody>
-            <tr ng-repeat="record in records| filter:searchText" ng-click="getDetails(record.ID)">
+            <tr ng-repeat="record in records | filter:searchText | orderBy:sortType:sortReverse" ng-click="getDetails(record.ID)">
                 <td class="text-center" style="padding-top:2em">{{record.ID}}</td>
                 <td class="text-center" style="padding-top:2em">{{record.DateCreated}}</td>
                 <td class="text-center" style="padding-top:2em">{{record.StaffID}}</td>
