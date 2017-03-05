@@ -208,22 +208,32 @@ webApp.controller('SuppliersEditController', ['$window','SERVER','SupplierServic
 }]);
 
 webApp.controller('PoController', ['$uibModal','PoService','$scope', function($modal,PoService,$scope){
-	$scope.purchaseOrders = PoService.purchaseOrders;
-    $scope.callRestService= function() {
-      $http({method: 'GET', url: '/someUrl'}).
-        success(function(data, status, headers, config) {
-             $scope.results.push(data);  //retrieve results and add to existing results
-        })
-    }
-    for(i=0;i<$scope.purchaseOrders.length;i++){
-        var totalWorth = 0;
-        var qArr = $scope.purchaseOrders[i].Quantity;
-        var pArr = $scope.purchaseOrders[i].Prices;
-        for(j=0;j<qArr.length;j++){
-            totalWorth += parseFloat(qArr[j])*parseFloat(pArr[j]);
+	    $scope.purchaseOrders;
+    
+        PoService.getOrders().then(function(response) {
+        $scope.purchaseOrders = PoService.purchaseOrders;
+//        console.log($scope.purchaseOrders);
+        $scope.result = response.data;
+        $scope.ingredientsList = response.data;
+        $scope.items = response.data
+        $scope.suppliers = response.data;
+        $scope.purchaseOrders = response.data;
+            
+         for(i=0;i<$scope.purchaseOrders.length;i++){
+            var totalWorth = 0;
+            var qArr = $scope.purchaseOrders[i].Quantity;
+            var pArr = $scope.purchaseOrders[i].Prices;
+            for(j=0;j<qArr.length;j++){
+                totalWorth += parseFloat(qArr[j])*parseFloat(pArr[j]);
+            }
+            $scope.purchaseOrders[i].TotalWorth = parseFloat(totalWorth).toFixed(2);
         }
-        $scope.purchaseOrders[i].TotalWorth = parseFloat(totalWorth).toFixed(2);
-    }
+            
+        }, function(error) {
+            console.log('opsssss' + error);
+        });
+
+   
     
     $scope.items = $scope.purchaseOrders;
     $scope.getDetails = function(PoId){
@@ -243,6 +253,13 @@ webApp.controller('PoController', ['$uibModal','PoService','$scope', function($m
                     $scope.ingredientArr = $scope.selectedItem.Ingredients;
                     $scope.quantityArr = $scope.selectedItem.Quantity;
                     $scope.priceArr = $scope.selectedItem.Prices;
+                    $scope.newArr = [];
+//                    console.log($scope.priceArr);
+                    for(j=0;j<$scope.priceArr.length;j++){
+//                        console.log($scope.priceArr[j]);
+                        $scope.newArr.push(parseFloat($scope.priceArr[j]));
+                    }
+                    $scope.priceArr = $scope.newArr;
                     $scope.selected = {
                         item: $scope.items[0]
                     };
@@ -308,14 +325,25 @@ webApp.controller('PoController', ['$uibModal','PoService','$scope', function($m
             $scope.newQArr.push($scope.choices[i].quantity);
             $scope.newPArr.push($scope.choices[i].prices);
         }
-//        $scope.newPo.SupplierName = $scope.;
+        $scope.newPo.SupplierName;
         $scope.newPo.DateCreated = $scope.getDate();
-        $scope.newPo.Ingredients = $scope.newIngArr;
-        $scope.newPo.Quantity = $scope.newQArr;
-        $scope.newPo.Prices = $scope.newPArr;
+        
+        $scope.testObj = {};
+        $scope.testObj.Ingredients = $scope.newIngArr;
+        $scope.t3 = {};
+        $scope.t2 = {};
+        $scope.t2.Ingredients = $scope.newQArr;
+        $scope.t3.Ingredients = $scope.newPArr;
+        
+        $scope.newPo.Ingredients = $scope.testObj.Ingredients;
+        $scope.newPo.Quantity = $scope.t2.Ingredients;
+        $scope.newPo.Prices = $scope.t3.Ingredients;
         $scope.newPo.Status = "pending";
         
-        console.log($scope.newPo);
+        PoService.createOrder($scope.newPo);
+        $scope.newIngArr = [];
+        $scope.newQArr = [];
+        $scope.newPArr = [];
     }
     
 }]);
@@ -412,6 +440,143 @@ webApp.factory('RecordService',function($http,SERVER){
     return o;
 })
 
+//Table Controller
+webApp.controller('TableController', ['$window','SupplierService','$scope','$uibModal', function($window,SupplierService,$scope,$modal){
+
+//	$scope.suppliers = [
+//        {supplierId:1,name:"Fresh Steak Gods",contactNumber:91239124,type:"Steak"},
+//        {supplierId:2,name:"VegeFarm",contactNumber:99999999,type:"Vegetables"}
+//    ];
+    $scope.suppliers;
+    SupplierService.getOrders().then(function(response) {
+//        $scope.result = response.data;
+        $scope.ingredientsList = response.data;
+        $scope.items = response.data
+        $scope.suppliers = response.data;
+    }, function(error) {
+        console.log('opsssss' + error);
+    });
+    $scope.items = $scope.suppliers;
+    
+    //modal
+    $scope.getDetails = function(supplierId){
+        $modal.open({
+                templateUrl: 'supplierDetails.html',
+                controller: ['SupplierService','$scope', '$uibModalInstance','items', function (SupplierService,$scope, $instance, items) {
+
+                    $scope.items = items;
+                    $scope.selectedItem;;
+                    for(i = 0; i<items.length; i++){
+                        if(items[i].supplierId == supplierId){
+                            $scope.selectedItem=items[i];
+                        }
+                    }
+                    $scope.selected = {
+                        item: $scope.items[0]
+                    };
+
+                    $scope.ok = function () {
+                        SupplierService.currentItem = $scope.selectedItem;
+                        $instance.close($scope.selected.item);
+                    };
+
+                    $scope.cancel = function () {
+                        $instance.dismiss('cancel');
+                    };
+                }],
+                size: 'lg',
+                resolve: {
+                    items: function () {
+                        return $scope.items;
+                    }
+                }
+            }).result.then(function (selectedItem) {
+                $scope.selected = {fruit: selectedItem}
+            }, function () {
+                //console.log('Modal dismissed at: ' + new Date());
+            });
+    }
+    
+    //create New Supplier
+    $scope.newSupplier = {};
+    $scope.createSupplier = function(){
+        console.log($scope.newSupplier);
+        SupplierService.createSupplier($scope.newSupplier);
+        //send to database
+        $window.location.href = '#/suppliers';
+        SupplierService.getOrders()
+    }
+    
+}]);
+
+//Menu Controller
+webApp.controller('MenuController', ['$window','SupplierService','$scope','$uibModal', function($window,SupplierService,$scope,$modal){
+
+//	$scope.suppliers = [
+//        {supplierId:1,name:"Fresh Steak Gods",contactNumber:91239124,type:"Steak"},
+//        {supplierId:2,name:"VegeFarm",contactNumber:99999999,type:"Vegetables"}
+//    ];
+    $scope.suppliers;
+    SupplierService.getOrders().then(function(response) {
+//        $scope.result = response.data;
+        $scope.ingredientsList = response.data;
+        $scope.items = response.data
+        $scope.suppliers = response.data;
+    }, function(error) {
+        console.log('opsssss' + error);
+    });
+    $scope.items = $scope.suppliers;
+    
+    //modal
+    $scope.getDetails = function(supplierId){
+        $modal.open({
+                templateUrl: 'supplierDetails.html',
+                controller: ['SupplierService','$scope', '$uibModalInstance','items', function (SupplierService,$scope, $instance, items) {
+
+                    $scope.items = items;
+                    $scope.selectedItem;;
+                    for(i = 0; i<items.length; i++){
+                        if(items[i].supplierId == supplierId){
+                            $scope.selectedItem=items[i];
+                        }
+                    }
+                    $scope.selected = {
+                        item: $scope.items[0]
+                    };
+
+                    $scope.ok = function () {
+                        SupplierService.currentItem = $scope.selectedItem;
+                        $instance.close($scope.selected.item);
+                    };
+
+                    $scope.cancel = function () {
+                        $instance.dismiss('cancel');
+                    };
+                }],
+                size: 'lg',
+                resolve: {
+                    items: function () {
+                        return $scope.items;
+                    }
+                }
+            }).result.then(function (selectedItem) {
+                $scope.selected = {fruit: selectedItem}
+            }, function () {
+                //console.log('Modal dismissed at: ' + new Date());
+            });
+    }
+    
+    //create New Supplier
+    $scope.newSupplier = {};
+    $scope.createSupplier = function(){
+        console.log($scope.newSupplier);
+        SupplierService.createSupplier($scope.newSupplier);
+        //send to database
+        $window.location.href = '#/suppliers';
+        SupplierService.getOrders()
+    }
+    
+}]);
 
 //Supplier Service
 webApp.factory('SupplierService', function($http,SERVER) {
@@ -425,7 +590,6 @@ webApp.factory('SupplierService', function($http,SERVER) {
         console.log(dataObj);
         return $http({
             method: 'GET',
-//            url: ' http://localhost:8080/TestEnterprise-war/webresources/ejb.TestingRestful/createIngredient? ',           //SIYI CHANGE THE URL HERE
             url:SERVER.url+'/TestEnterprise-war/webresources/ejb.SupplierRestful/createSupplier',
             params: dataObj,
         }).success(function(data){
@@ -515,20 +679,64 @@ webApp.factory('PoService',function($http,SERVER){
     //            url:SERVER.url+'/TestEnterprise-war/webresources/ejb.PurchaseOrder/getPurchaseOrder',
     var o = {
         currentItem:{},
-        purchaseOrders: [
-            {
-                ID: 25,SupplierName:"VegeFarm Pte. Ltd.",DateCreated:"28/02/2017", Status:"pending",
-                Ingredients:["Ponyo", "KangKong", "Cheddar"],Quantity: [2,5,10],Prices:[5.50,4.20,10.51]
-            },
-            {
-                ID: 26,SupplierName:"VegeFarm Pte. Ltd.",DateCreated:"28/02/2017", Status:"cancelled",
-                Ingredients:["Ponyo", "KangKong", "Cheddar"],Quantity: [2,5,10],Prices:[15.52,42.13,10.29]
-            },
-            {
-                ID: 27,SupplierName:"VegeFarm Pte. Ltd.",DateCreated:"28/02/2017", Status:"fulfilled",
-                Ingredients:["Ponyo", "KangKong", "Cheddar"],Quantity: [2,5,10],Prices:[15.52,42.13,10.29]
+        purchaseOrders: []
+//        purchaseOrders: [
+//            {
+//                ID: 25,SupplierName:"VegeFarm Pte. Ltd.",DateCreated:"28/02/2017", Status:"pending",
+//                Ingredients:["Ponyo", "KangKong", "Cheddar"],Quantity: [2,5,10],Prices:[5.50,4.20,10.51]
+//            },
+//            {
+//                ID: 26,SupplierName:"VegeFarm Pte. Ltd.",DateCreated:"28/02/2017", Status:"cancelled",
+//                Ingredients:["Ponyo", "KangKong", "Cheddar"],Quantity: [2,5,10],Prices:[15.52,42.13,10.29]
+//            },
+//            {
+//                ID: 27,SupplierName:"VegeFarm Pte. Ltd.",DateCreated:"28/02/2017", Status:"fulfilled",
+//                Ingredients:["Ponyo", "KangKong", "Cheddar"],Quantity: [2,5,10],Prices:[15.52,42.13,10.29]
+//            }
+//        ]
+    }
+    o.getOrders = function(){
+        console.log("getAllPurchaseOrders");
+        return $http({
+            method: 'GET',
+            url:SERVER.url+'/TestEnterprise-war/webresources/ejb.purchaseOrderRestful/GetAllPurchaseOrder',
+//            url:SERVER.url+'/TestEnterprise-war/webresources/ejb.purchaseOrderRestful/getPurchaseOrder',
+//            params: {id:"501"}
+        }).success(function(data){
+            console.log(data);
+            for(j=0;j<data.length;j++){
+                var temp = {};
+                var current = data[j];
+//                console.log(data[j]);
+                temp.ID = current.ID;
+                temp.DateCreated = current.DateCreated;
+                temp.SupplierName = current.SupplierName;
+                temp.Ingredients = [];
+                temp.Prices = [];
+                temp.Quantity = [];
+                for(i=0;i<current.Ingredients.length;i++){
+                    temp.Ingredients.push(current.Ingredients[i]);
+                    temp.Prices.push(current.Prices[i]);
+                    temp.Quantity.push(current.Quantity[i]);
+                }
+//                console.log("---POs--");
+                o.purchaseOrders.push(temp);
+//                console.log(o.purchaseOrders);
             }
-        ]
+        });
+    }
+    
+        o.createOrder = function(dataObj){
+        console.log("-----");
+        console.log(dataObj);
+        return $http({
+            method: 'POST',
+            url:SERVER.url+'/TestEnterprise-war/webresources/ejb.purchaseOrderRestful/createPurchaseOrderJson',
+            params: dataObj,
+        }).success(function(data){
+            console.log(data);
+            o.orders = data;
+        });
     }
     
     return o;

@@ -45,7 +45,18 @@ webApp.config(['$routeProvider', function($routeProvider) {
             templateUrl: 'views/createRecord.html',
             controller: 'RecordController'
         })
+        
+        //Menu Module
+        .when('/menu',{
+            templateUrl: 'views/menu.html',
+            controller: 'MenuController'
+        })
     
+        //Table Module
+        .when('/table',{
+            templateUrl: 'views/table.html',
+            controller: 'TableController'
+        })
     
         //otherwise
 		.otherwise({

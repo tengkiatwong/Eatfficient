@@ -48,8 +48,8 @@
 </div>
 
 <!--  Details Modal  -->
-<script type="text/ng-template" id="PoDetails.html">
-	<div class="modal-header" style="background-color:limegreen;color:white">
+<script type="text/ng-template" id="PoDetails.html" style="padding-top:5em;margin-top:170px">
+	<div class="modal-header" style="background-color:#139970;color:white">
         <div style="font-size:2em;display:inline">Staff ID: {{selectedItem.StaffID}}</div>
         <div class="pull-right" style="font-size:2em">[{{selectedItem.ID}}]</div>
 	</div>
@@ -60,14 +60,14 @@
                 {{selectedItem.Status.charAt(0).toUpperCase()+ selectedItem.Status.slice(1)}}
             </div>
         </div>
-        <div class="row">
+        <div class="row" style="background-color:#f7f7f7">
             <div class="col-md-6">
-                <h4>Ingredient</h4>
+                <h3><strong>Ingredient</strong></h3>
                 <h4 data-ng-repeat="i in ingredientArr">{{i}}</h4>
             </div>
-            <div class="col-md-6">
-                <h4>Quantity ({{selectedItem.Unit}})</h4>
-                <h4 data-ng-repeat="i in quantityArr">{{i}}</h4>
+            <div class="col-md-2">
+                <h3>Quantity ({{selectedItem.Unit}})</h3>
+                <h4 class="text-center" data-ng-repeat="i in quantityArr">{{i}}</h4>
             </div>
         </div>
         <div style="border-top:1px solid black;font-size:2em;padding-bottom:1em">Amount Paid: ${{selectedItem.Amount.toFixed(2)}}</div>
@@ -94,6 +94,8 @@
 </script>
 
 <style>
+    
+    
     .pending {
         color: white;
         background-color: #ffbf00
