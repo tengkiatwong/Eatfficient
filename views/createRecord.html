@@ -19,7 +19,13 @@
             <div class="control-group" style="padding-bottom:1em">
               <label>Purchase Date (DD/MM/YYYY)</label>
               <div class="controls">
-                <input type="text" class="form-control" ng-model="newRecord.PurchaseDate" required>
+<!--                <input type="text" class="form-control" ng-model="newRecord.PurchaseDate" required>-->
+                  <script> 
+                    $(function() { 
+                        $( "#datepicker" ).datepicker(); 
+                    }); 
+                    </script> 
+                  <input type="text" id="datepicker" ng-model="newRecord.PurchaseDate">
               </div>
             </div> 
               

@@ -386,6 +386,8 @@ webApp.controller('PoController', ['$window','$uibModal','PoService','$scope', f
 
 
 webApp.controller('RecordController', ['$window','$uibModal','RecordService','$scope', function($window,$modal,RecordService,$scope){
+    this.myDate = new Date();
+    this.isOpen = false;
     $scope.sortType     = 'ID'; // set the default sort type
     $scope.sortReverse  = false;  // set the default sort order
 	$scope.records;
@@ -492,6 +494,7 @@ webApp.controller('RecordController', ['$window','$uibModal','RecordService','$s
     $scope.newQArr = [];
     $scope.newRecord = {}; //final sending object
     $scope.createRecord = function(){
+        $scope.newRecord.PurchaseDate;
         for(i=0;i<$scope.choices.length;i++){
             $scope.newIngArr.push($scope.choices[i].ingredient);
             $scope.newQArr.push($scope.choices[i].quantity);
@@ -501,9 +504,10 @@ webApp.controller('RecordController', ['$window','$uibModal','RecordService','$s
         for(i=0;i<$scope.newRecord.Ingredients.length;i++){
             $scope.newRecord.Ingredients[i] = $scope.newRecord.Ingredients[i].charAt(0).toUpperCase() + $scope.newRecord.Ingredients[i].slice(1);
         }
-        console.log($scope.newRecord.Ingredients);
         $scope.newRecord.Quantity = $scope.newQArr;
         $scope.newRecord.Status = "pending";
+         $scope.newRecord.PurchaseDate = $('#datepicker').val();
+        console.log($scope.newRecord.PurchaseDate);
         RecordService.createOrder($scope.newRecord);
         $scope.newIngArr = [];
         $scope.newQArr = [];
