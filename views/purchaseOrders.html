@@ -10,7 +10,7 @@
         <div class="span12 pull-right search-form"  style="display:inline;padding-top:0.7em">
             <form id="custom-search-form" class="form-search form-horizontal pull-right">
                 <div class="input-append span12">
-                    <input type="text" class="search-query" placeholder="Search">
+                    <input type="text" class="search-query" placeholder="Search" ng-model="searchText">
                     <button type="submit" class="btn"><i class="glyphicon glyphicon-search"></i></button>
                 </div>
             </form>
@@ -29,7 +29,7 @@
             </tr>
         </thead>
         <tbody>
-            <tr ng-repeat="purchaseOrder in purchaseOrders" ng-click="getDetails(purchaseOrder.ID)">
+            <tr ng-repeat="purchaseOrder in purchaseOrders | filter:searchText" ng-click="getDetails(purchaseOrder.ID)">
                 <td class="text-center" style="padding-top:2em">{{purchaseOrder.ID}}</td>
                 <td class="text-center" style="padding-top:2em">{{purchaseOrder.DateCreated}}</td>
                 <td>

@@ -24,7 +24,7 @@
          <div class="span12 pull-right search-form"  style="display:inline;padding-top:0.7em">
             <form id="custom-search-form" class="form-search form-horizontal pull-right">
                 <div class="input-append span12">
-                    <input type="text" class="search-query" placeholder="Search">
+                    <input type="text" class="search-query" placeholder="Search" ng-model="searchText">
                     <button type="submit" class="btn"><i class="glyphicon glyphicon-search"></i></button>
                 </div>
             </form>
@@ -45,7 +45,7 @@
             </tr>
         </thead>
         <tbody>
-            <tr ng-repeat="ingredient in ingredientsList" ng-click="getDetails(ingredient.ID)">
+            <tr ng-repeat="ingredient in ingredientsList | filter:searchText" ng-click="getDetails(ingredient.ID)">
                 <td>{{ingredient.ID}}</td>
                 <td>{{ingredient.Name}}</td>
                 <td>{{ingredient.Description}}</td>

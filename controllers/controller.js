@@ -818,20 +818,6 @@ webApp.factory('PoService',function($http,SERVER){
     var o = {
         currentItem:{},
         purchaseOrders: []
-//        purchaseOrders: [
-//            {
-//                ID: 25,SupplierName:"VegeFarm Pte. Ltd.",DateCreated:"28/02/2017", Status:"pending",
-//                Ingredients:["Ponyo", "KangKong", "Cheddar"],Quantity: [2,5,10],Prices:[5.50,4.20,10.51]
-//            },
-//            {
-//                ID: 26,SupplierName:"VegeFarm Pte. Ltd.",DateCreated:"28/02/2017", Status:"cancelled",
-//                Ingredients:["Ponyo", "KangKong", "Cheddar"],Quantity: [2,5,10],Prices:[15.52,42.13,10.29]
-//            },
-//            {
-//                ID: 27,SupplierName:"VegeFarm Pte. Ltd.",DateCreated:"28/02/2017", Status:"fulfilled",
-//                Ingredients:["Ponyo", "KangKong", "Cheddar"],Quantity: [2,5,10],Prices:[15.52,42.13,10.29]
-//            }
-//        ]
     }
     o.getOrders = function(){
         console.log("getAllPurchaseOrders");
@@ -841,7 +827,7 @@ webApp.factory('PoService',function($http,SERVER){
 //            url:SERVER.url+'/TestEnterprise-war/webresources/ejb.purchaseOrderRestful/getPurchaseOrder',
 //            params: {id:"501"}
         }).success(function(data){
-            console.log(data);
+//            console.log(data);
             for(j=0;j<data.length;j++){
                 var temp = {};
                 var current = data[j];
