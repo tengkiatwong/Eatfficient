@@ -232,8 +232,6 @@ webApp.controller('PoController', ['$uibModal','PoService','$scope', function($m
         }, function(error) {
             console.log('opsssss' + error);
         });
-
-   
     
     $scope.items = $scope.purchaseOrders;
     $scope.getDetails = function(PoId){
@@ -273,6 +271,22 @@ webApp.controller('PoController', ['$uibModal','PoService','$scope', function($m
                     $scope.cancel = function () {
                         $instance.dismiss('cancel');
                     };
+                            //edit Po
+                    $scope.editPurchaseOrder = function(){
+                        $scope.editObj = {};
+                        $scope.editObj.ID = $scope.selectedItem.ID;
+                        $scope.editObj.Status = $scope.master.Status;
+                        console.log($scope.editObj);
+                        PoService.editOrder($scope.editObj);
+                    }
+
+                    //delete Po
+                    $scope.deletePurchaseOrder = function(){
+                        $scope.deleteObj = {};
+                        $scope.deleteObj.ID = $scope.selectedItem.ID;
+                        console.log($scope.deleteObj);
+                        PoService.deleteOrder($scope.deleteObj);
+                    }
                 }],
                 size: 'lg',
                 resolve: {
@@ -345,6 +359,7 @@ webApp.controller('PoController', ['$uibModal','PoService','$scope', function($m
         $scope.newQArr = [];
         $scope.newPArr = [];
     }
+
     
 }]);
 
@@ -726,12 +741,31 @@ webApp.factory('PoService',function($http,SERVER){
         });
     }
     
-        o.createOrder = function(dataObj){
-        console.log("-----");
-        console.log(dataObj);
+    o.createOrder = function(dataObj){
         return $http({
             method: 'POST',
             url:SERVER.url+'/TestEnterprise-war/webresources/ejb.purchaseOrderRestful/createPurchaseOrderJson',
+            params: dataObj,
+        }).success(function(data){
+            console.log(data);
+            o.orders = data;
+        });
+    }
+    
+    o.editOrder = function(dataObj){
+         return $http({
+            method: 'GET',
+            url:SERVER.url+'/TestEnterprise-war/webresources/ejb.purchaseOrderRestful/editPurchaseOrder',
+            params: dataObj,
+        }).success(function(data){
+            console.log(data);
+            o.orders = data;
+        });
+    }
+     o.deleteOrder = function(dataObj){
+         return $http({
+            method: 'GET',
+            url:SERVER.url+'/TestEnterprise-war/webresources/ejb.purchaseOrderRestful/deletePurchaseOrder',
             params: dataObj,
         }).success(function(data){
             console.log(data);

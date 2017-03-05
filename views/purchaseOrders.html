@@ -88,12 +88,9 @@
 	<div class="modal-footer">
 <!--		<button class="btn btn-success" ng-click="ok()">OK</button>-->
         <button ng-show="selectedItem.Status=='cancelled'" class="btn btn-danger pull-left" ng-click="deletePurchaseOrder()">Delete</button>
-        <a type="button" id="editButton" class="btn btn-primary" ng-click="ok()">
-            <span class="glyphicon glyphicon-pencil"></span> Edit
-        </a>
-         <a type="button" id="saveButton" class="btn btn-success" ng-click="save()" style="display:none">
-            <span class="glyphicon glyphicon-floppy-disk"></span> Save
-        </a>
+        <button type="button" class="btn btn-primary" ng-click="editPurchaseOrder()">
+            <span class="glyphicon glyphicon-pencil"></span> EditNEWNEW
+        </button>
 		<button class="btn btn-default" ng-click="cancel()">Cancel</button>
 	</div>
 </script>
