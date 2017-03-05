@@ -203,7 +203,10 @@ webApp.controller('SuppliersEditController', ['$window','SERVER','SupplierServic
         $scope.deleteMessage = {};
         $scope.deleteMessage.ID = $scope.currentItem.supplierId;
         console.log($scope.deleteMessage);
-        //SupplierService.deleteSupplier($scope.deleteMessage);
+        SupplierService.deleteSupplier($scope.deleteMessage);
+        $window.location.href = '#/suppliers';
+        RecordService.getOrders();
+        location.reload();
     }
 }]);
 
@@ -290,6 +293,10 @@ webApp.controller('PoController', ['$window','$uibModal','PoService','$scope', f
                         $scope.deleteObj.ID = $scope.selectedItem.ID;
                         console.log($scope.deleteObj);
                         PoService.deleteOrder($scope.deleteObj);
+                        $instance.dismiss('cancel');
+                        $window.location.href = '#/purchaseOrders';
+                        PoService.getOrders();
+                        location.reload();
                     }
                 }],
                 size: 'lg',
@@ -482,10 +489,14 @@ webApp.controller('RecordController', ['$window','$uibModal','RecordService','$s
             $scope.newIngArr.push($scope.choices[i].ingredient);
             $scope.newQArr.push($scope.choices[i].quantity);
         }
+        //Ingredients array normalize(Capitalize first letter)
         $scope.newRecord.Ingredients = $scope.newIngArr;
+        for(i=0;i<$scope.newRecord.Ingredients.length;i++){
+            $scope.newRecord.Ingredients[i] = $scope.newRecord.Ingredients[i].charAt(0).toUpperCase() + $scope.newRecord.Ingredients[i].slice(1);
+        }
+        console.log($scope.newRecord.Ingredients);
         $scope.newRecord.Quantity = $scope.newQArr;
         $scope.newRecord.Status = "pending";
-        console.log($scope.newRecord);
         RecordService.createOrder($scope.newRecord);
         $scope.newIngArr = [];
         $scope.newQArr = [];
@@ -502,14 +513,13 @@ webApp.factory('RecordService',function($http,SERVER){
         records: []
     }
     o.getOrders = function(){
-        console.log("getAllRecords");
         return $http({
             method: 'GET',
             url:SERVER.url+'/TestEnterprise-war/webresources/ejb.recordRestful/getAllRecord',
 //            url:SERVER.url+'/TestEnterprise-war/webresources/ejb.purchaseOrderRestful/getPurchaseOrder',
 //            params: {id:"501"}
         }).success(function(data){
-            console.log(data);
+//            console.log(data);
             for(j=0;j<data.length;j++){
                 var temp = {};
                 var current = data[j];
@@ -756,7 +766,7 @@ webApp.factory('SupplierService', function($http,SERVER) {
         return $http({
             method: 'GET',
             //change URL to delete
-            url:SERVER.url+'/TestEnterprise-war/webresources/ejb.SupplierRestful/editSupplier',
+            url:SERVER.url+'/TestEnterprise-war/webresources/ejb.SupplierRestful/deleteSupplier',
             params: dataObj
         }).success(function(data){
             console.log(data);
