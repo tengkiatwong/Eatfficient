@@ -32,14 +32,14 @@
         <tbody>
             <tr ng-repeat="record in records" ng-click="getDetails(record.ID)">
                 <td class="text-center" style="padding-top:2em">{{record.ID}}</td>
-                <td class="text-center" style="padding-top:2em">{{record.PurchaseDate}}</td>
+                <td class="text-center" style="padding-top:2em">{{record.DateCreated}}</td>
                 <td class="text-center" style="padding-top:2em">{{record.StaffID}}</td>
                 <td>
                     <div data-ng-repeat="i in record.Ingredients">
                         {{i}}
                     </div>
                 </td>
-                <td class="text-center" style="font-weight:bold;padding-top:1.8em;font-size:1.2em">$ {{record.Amount.toFixed(2)}}</td>
+                <td class="text-center" style="font-weight:bold;padding-top:1.8em;font-size:1.2em">$ {{record.AMount.toFixed(2)}}</td>
                 <td ng-class="{'pending':record.Status=='pending','fulfilled':record.Status=='paid'}" style="font-size:1em;padding-top:2em" class="text-center">{{record.Status}}</td>
             </tr>
         </tbody>
@@ -70,7 +70,7 @@
                 <h4 class="text-center" data-ng-repeat="i in quantityArr">{{i}}</h4>
             </div>
         </div>
-        <div style="border-top:1px solid black;font-size:2em;padding-bottom:1em">Amount Paid: ${{selectedItem.Amount.toFixed(2)}}</div>
+        <div style="border-top:1px solid black;font-size:2em;padding-bottom:1em">Amount Paid: ${{selectedItem.AMount.toFixed(2)}}</div>
         <div class="form-group">
           <label for="sel1">Edit Status</label>
           <select class="form-control" ng-model="master.Status">
@@ -83,11 +83,8 @@
 <!--    <div style="">{{selectedItem.TotalWorth}}</div>-->
 	<div class="modal-footer">
         <button ng-show="selectedItem.Status=='paid'" class="btn btn-danger pull-left" ng-click="deleteRecord()">Delete</button>
-        <a type="button" id="editButton" class="btn btn-primary" ng-click="ok()">
+        <a type="button" id="editButton" class="btn btn-primary" ng-click="editRecord()">
             <span class="glyphicon glyphicon-pencil"></span> Edit
-        </a>
-         <a type="button" id="saveButton" class="btn btn-success" ng-click="save()" style="display:none">
-            <span class="glyphicon glyphicon-floppy-disk"></span> Save
         </a>
 		<button class="btn btn-default" ng-click="cancel()">Cancel</button>
 	</div>

@@ -207,7 +207,7 @@ webApp.controller('SuppliersEditController', ['$window','SERVER','SupplierServic
     }
 }]);
 
-webApp.controller('PoController', ['$uibModal','PoService','$scope', function($modal,PoService,$scope){
+webApp.controller('PoController', ['$window','$uibModal','PoService','$scope', function($window,$modal,PoService,$scope){
 	    $scope.purchaseOrders;
     
         PoService.getOrders().then(function(response) {
@@ -278,6 +278,10 @@ webApp.controller('PoController', ['$uibModal','PoService','$scope', function($m
                         $scope.editObj.Status = $scope.master.Status;
                         console.log($scope.editObj);
                         PoService.editOrder($scope.editObj);
+                        $instance.dismiss('cancel');
+                        $window.location.href = '#/purchaseOrders';
+                        PoService.getOrders();
+                        location.reload();
                     }
 
                     //delete Po
@@ -350,6 +354,9 @@ webApp.controller('PoController', ['$uibModal','PoService','$scope', function($m
         $scope.t3.Ingredients = $scope.newPArr;
         
         $scope.newPo.Ingredients = $scope.testObj.Ingredients;
+        for(i=0;i<$scope.newPo.Ingredients.length;i++){
+            $scope.newPo.Ingredients[i] = $scope.newPo.Ingredients[i].charAt(0).toUpperCase() + $scope.newPo.Ingredients[i].slice(1);
+        }
         $scope.newPo.Quantity = $scope.t2.Ingredients;
         $scope.newPo.Prices = $scope.t3.Ingredients;
         $scope.newPo.Status = "pending";
@@ -358,24 +365,27 @@ webApp.controller('PoController', ['$uibModal','PoService','$scope', function($m
         $scope.newIngArr = [];
         $scope.newQArr = [];
         $scope.newPArr = [];
+        $window.location.href = '#/purchaseOrders';
+        PoService.getOrders();
     }
 
     
 }]);
 
 
-webApp.controller('RecordController', ['$uibModal','RecordService','$scope', function($modal,RecordService,$scope){
+webApp.controller('RecordController', ['$window','$uibModal','RecordService','$scope', function($window,$modal,RecordService,$scope){
 	$scope.records;
     $scope.items;
     RecordService.getOrders().then(function(response) {
         $scope.records= response.data;
         $scope.result = response.data;
         $scope.items = response.data
-            
+        $scope.records.AMount = parseFloat($scope.records.AMount);
          for(i=0;i<$scope.records.length;i++){
             var totalWorth = 0;
             var qArr = $scope.records[i].Quantity;
             var pArr = $scope.records[i].Prices;
+             $scope.records[i].AMount = parseFloat($scope.records[i].AMount)
         }
             
         }, function(error) {
@@ -413,6 +423,31 @@ webApp.controller('RecordController', ['$uibModal','RecordService','$scope', fun
                     $scope.cancel = function () {
                         $instance.dismiss('cancel');
                     };
+                    
+                    $scope.editRecord = function(){
+                        $scope.editObj = {};
+                        $scope.editObj.ID = $scope.selectedItem.ID;
+                        $scope.editObj.Status = $scope.master.Status;
+                        console.log($scope.editObj);
+                        RecordService.editRecord($scope.editObj);
+                        $instance.dismiss('cancel');
+                        $window.location.href = '#/records';
+                        RecordService.getOrders();
+                        location.reload();
+                    }
+                    
+                    $scope.deleteRecord = function(){
+                        $scope.deleteObj = {};
+                        $scope.deleteObj.ID = $scope.selectedItem.ID;
+                        console.log("trying to delete");
+                        console.log($scope.deleteObj);
+                        RecordService.deleteRecord($scope.deleteObj);
+                        $instance.dismiss('cancel');
+                        $window.location.href = '#/records';
+                        RecordService.getOrders();
+                        location.reload();
+                    }
+                    
                 }],
                 size: 'lg',
                 resolve: {
@@ -454,6 +489,8 @@ webApp.controller('RecordController', ['$uibModal','RecordService','$scope', fun
         RecordService.createOrder($scope.newRecord);
         $scope.newIngArr = [];
         $scope.newQArr = [];
+        $window.location.href = '#/records';
+        RecordService.getOrders();
     }
 
     
@@ -502,22 +539,23 @@ webApp.factory('RecordService',function($http,SERVER){
             console.log(data);
             o.orders = data;
         });
+        
     }
     
-    o.editOrder = function(dataObj){
+    o.editRecord = function(dataObj){
          return $http({
             method: 'GET',
-            url:SERVER.url+'/TestEnterprise-war/webresources/ejb.purchaseOrderRestful/editPurchaseOrder',
+            url:SERVER.url+'/TestEnterprise-war/webresources/ejb.recordRestful/editRecord',
             params: dataObj,
         }).success(function(data){
             console.log(data);
             o.orders = data;
         });
     }
-     o.deleteOrder = function(dataObj){
+     o.deleteRecord = function(dataObj){
          return $http({
             method: 'GET',
-            url:SERVER.url+'/TestEnterprise-war/webresources/ejb.purchaseOrderRestful/deletePurchaseOrder',
+            url:SERVER.url+'/TestEnterprise-war/webresources/ejb.recordRestful/deleteRecord',
             params: dataObj,
         }).success(function(data){
             console.log(data);
