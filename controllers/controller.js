@@ -365,9 +365,24 @@ webApp.controller('PoController', ['$uibModal','PoService','$scope', function($m
 
 
 webApp.controller('RecordController', ['$uibModal','RecordService','$scope', function($modal,RecordService,$scope){
-	$scope.records = RecordService.records;
+	$scope.records;
+    $scope.items;
+    RecordService.getOrders().then(function(response) {
+        $scope.records= response.data;
+        $scope.result = response.data;
+        $scope.items = response.data
+            
+         for(i=0;i<$scope.records.length;i++){
+            var totalWorth = 0;
+            var qArr = $scope.records[i].Quantity;
+            var pArr = $scope.records[i].Prices;
+        }
+            
+        }, function(error) {
+            console.log('opsssss' + error);
+        });
     
-    $scope.items = $scope.records;
+    
     $scope.getDetails = function(PoId){
         $modal.open({
                 templateUrl: 'PoDetails.html',
@@ -436,6 +451,9 @@ webApp.controller('RecordController', ['$uibModal','RecordService','$scope', fun
         $scope.newRecord.Quantity = $scope.newQArr;
         $scope.newRecord.Status = "pending";
         console.log($scope.newRecord);
+        RecordService.createOrder($scope.newRecord);
+        $scope.newIngArr = [];
+        $scope.newQArr = [];
     }
 
     
@@ -443,15 +461,72 @@ webApp.controller('RecordController', ['$uibModal','RecordService','$scope', fun
 
 webApp.factory('RecordService',function($http,SERVER){
     var o = {
-        records: [
-            {
-                ID: 5,StaffID:255,Amount:28.80,PurchaseDate:"12/02/2017",Ingredients:["leek","onion","Leaves"],Status:"paid",Quantity:[2,5,6]
-            },
-            {
-                ID: 6,StaffID:282,Amount:50.80,PurchaseDate:"18/05/2017",Ingredients:["leek","lettuce","olives"],Status:"pending",Quantity:[2,5,6]
-            }
-        ]
+        currentItem:{},
+        records: []
     }
+    o.getOrders = function(){
+        console.log("getAllRecords");
+        return $http({
+            method: 'GET',
+            url:SERVER.url+'/TestEnterprise-war/webresources/ejb.recordRestful/getAllRecord',
+//            url:SERVER.url+'/TestEnterprise-war/webresources/ejb.purchaseOrderRestful/getPurchaseOrder',
+//            params: {id:"501"}
+        }).success(function(data){
+            console.log(data);
+            for(j=0;j<data.length;j++){
+                var temp = {};
+                var current = data[j];
+//                console.log(data[j]);
+                temp.ID = current.ID;
+                temp.DateCreated = current.DateCreated;
+                temp.SupplierName = current.SupplierName;
+                temp.Ingredients = [];
+                temp.Quantity = [];
+                for(i=0;i<current.Ingredients.length;i++){
+                    temp.Ingredients.push(current.Ingredients[i]);
+                    temp.Quantity.push(current.Quantity[i]);
+                }
+////                console.log("---POs--");
+//                o.purchaseOrders.push(temp);
+////                console.log(o.purchaseOrders);
+            }
+        });
+    }
+    
+    o.createOrder = function(dataObj){
+        return $http({
+            method: 'POST',
+            url:SERVER.url+'/TestEnterprise-war/webresources/ejb.recordRestful/createRecordJson',
+            params: dataObj,
+        }).success(function(data){
+            console.log(data);
+            o.orders = data;
+        });
+    }
+    
+    o.editOrder = function(dataObj){
+         return $http({
+            method: 'GET',
+            url:SERVER.url+'/TestEnterprise-war/webresources/ejb.purchaseOrderRestful/editPurchaseOrder',
+            params: dataObj,
+        }).success(function(data){
+            console.log(data);
+            o.orders = data;
+        });
+    }
+     o.deleteOrder = function(dataObj){
+         return $http({
+            method: 'GET',
+            url:SERVER.url+'/TestEnterprise-war/webresources/ejb.purchaseOrderRestful/deletePurchaseOrder',
+            params: dataObj,
+        }).success(function(data){
+            console.log(data);
+            o.orders = data;
+        });
+    }
+    
+    return o;
+    
     return o;
 })
 
