@@ -205,10 +205,9 @@ webApp.controller('SuppliersEditController', ['$window','SERVER','SupplierServic
     $scope.deleteSupplier = function(){
         $scope.deleteMessage = {};
         $scope.deleteMessage.ID = $scope.currentItem.supplierId;
-        console.log($scope.deleteMessage);
         SupplierService.deleteSupplier($scope.deleteMessage);
+//        RecordService.getOrders();
         $window.location.href = '#/suppliers';
-        RecordService.getOrders();
         location.reload();
     }
 }]);
@@ -590,73 +589,261 @@ webApp.factory('RecordService',function($http,SERVER){
 })
 
 //Table Controller
-webApp.controller('TableController', ['$window','SupplierService','$scope','$uibModal', function($window,SupplierService,$scope,$modal){
-
-//	$scope.suppliers = [
-//        {supplierId:1,name:"Fresh Steak Gods",contactNumber:91239124,type:"Steak"},
-//        {supplierId:2,name:"VegeFarm",contactNumber:99999999,type:"Vegetables"}
-//    ];
-    $scope.suppliers;
-    SupplierService.getOrders().then(function(response) {
-//        $scope.result = response.data;
-        $scope.ingredientsList = response.data;
-        $scope.items = response.data
-        $scope.suppliers = response.data;
-    }, function(error) {
-        console.log('opsssss' + error);
-    });
-    $scope.items = $scope.suppliers;
+webApp.controller('TableController', ['$route','TableService','$window','$scope','$uibModal', function($route,TableService,$window,$scope,$modal){
+    $scope.arrs = TableService.data;
     
-    //modal
-    $scope.getDetails = function(supplierId){
-        $modal.open({
-                templateUrl: 'supplierDetails.html',
-                controller: ['SupplierService','$scope', '$uibModalInstance','items', function (SupplierService,$scope, $instance, items) {
+    
+    
+    $scope.up = function(ID){
+        for(i=0;i<$scope.arrs.length;i++){
+            //console.log($scope.arrs[i].ID);
+            if($scope.arrs[i].ID==ID){
+                TableService.currentItem = $scope.arrs[i];
+            }
+        }
+    }
+//    console.log($stateParams);
+}]);
 
-                    $scope.items = items;
-                    $scope.selectedItem;;
-                    for(i = 0; i<items.length; i++){
-                        if(items[i].supplierId == supplierId){
-                            $scope.selectedItem=items[i];
-                        }
+webApp.controller('TableEditController', ['$route','TableService','$window','$scope','$uibModal', function($route,TableService,$window,$scope,$modal){
+    $scope.currentItem = TableService.currentItem;
+//    console.log($scope.currentItem);
+    $scope.draggableObjects = [{name:' '}];
+    $scope.droppedObjects1 = [];
+
+    $scope.arr = [];
+    $scope.rows = TableService.create.rows; //height (how many arrays)
+    $scope.cols = TableService.create.cols; //width (size of array[])
+    var dataSet = $scope.currentItem.Arr;
+    for(i=0;i<dataSet.length;i++){
+        var curr = [];
+        for(j=0;j<dataSet[0].length;j++){
+            if(dataSet[i][j]==true){
+                curr[j] = {
+                    position:i+","+j,
+                    items : [{name:' ',host:[i,j]}],
+//                    host: [i,j]
+                };
+            }
+            else{
+                curr[j] = {
+                    position:i+","+j,
+                    items : []
+                };
+            }
+        }
+        $scope.arr.push(curr);
+    }
+//    console.log($scope.arr);
+
+    $scope.resize = function(){
+        if(TableService.rows==$scope.rows && TableService.cols==$scope.cols)
+            return;
+
+        if($scope.rows>10 || $scope.cols>20){
+            alert("size is too large!");
+            return;
+        }
+
+        TableService.create.rows = $scope.rows;
+        TableService.create.cols = $scope.cols;
+        $route.reload();
+    }
+        
+    
+        $scope.onDropComplete=function(data,evt){;
+            //drop new table
+            var targetID = $(evt.event.target).attr("targetID");
+            targetID = targetID.substring(0,targetID.length);
+            var coordinate = targetID.split(",");
+            coordinate[0] = parseInt(coordinate[0]);
+            coordinate[1] = parseInt(coordinate[1]);
+            var current = $scope.arr[coordinate[0]][coordinate[1]];
+            var newObj = angular.copy(data);
+            newObj.host = coordinate;
+            current.items = [];
+            current.items.push(newObj);
+                        
+        }
+        
+        $scope.onDragSuccess1=function(data,evt){
+            var targetID = $(evt.event.target).attr("targetID");
+        }
+        $scope.pro = function(data,evt){
+            console.log(data);
+            var coord = data.host;
+            console.log(coord);
+            if(data.host == null)
+                return;
+            var current = $scope.arr[coord[0]][coord[1]];
+            current.items = [];
+        }
+        
+        $scope.saveLayout = function(){
+            var arr = $scope.arr;
+            var masterArr = [];
+            var count = 0;
+            for(i=0;i<arr.length;i++){
+                var curr = [];
+                for(j=0;j<arr[0].length;j++){
+                    if(arr[i][j].items.length==1){
+                        curr.push(true);
+                        count+=1;
                     }
-                    $scope.selected = {
-                        item: $scope.items[0]
-                    };
-
-                    $scope.ok = function () {
-                        SupplierService.currentItem = $scope.selectedItem;
-                        $instance.close($scope.selected.item);
-                    };
-
-                    $scope.cancel = function () {
-                        $instance.dismiss('cancel');
-                    };
-                }],
-                size: 'lg',
-                resolve: {
-                    items: function () {
-                        return $scope.items;
-                    }
+                    
+                    else
+                        curr.push(false);
                 }
-            }).result.then(function (selectedItem) {
-                $scope.selected = {fruit: selectedItem}
-            }, function () {
-                //console.log('Modal dismissed at: ' + new Date());
-            });
-    }
-    
-    //create New Supplier
-    $scope.newSupplier = {};
-    $scope.createSupplier = function(){
-        console.log($scope.newSupplier);
-        SupplierService.createSupplier($scope.newSupplier);
-        //send to database
-        $window.location.href = '#/suppliers';
-        SupplierService.getOrders()
-    }
+                masterArr.push(curr);
+            }
+            var master1  = {};
+            master1.Arr = masterArr;
+            master1.Name = $scope.currentItem.Name;
+            master1.Active = false;
+            master1.Tables = count;
+            console.log(master1);
+        }
     
 }]);
+
+webApp.controller('TableCreateController', ['$route','TableService','$window','$scope','$uibModal', function($route,TableService,$window,$scope,$modal){
+        $scope.draggableObjects = [{name:' '}];
+        $scope.droppedObjects1 = [];
+        $scope.Name = "";
+        $scope.arr = [];
+        $scope.rows = TableService.create.rows; //height (how many arrays)
+        $scope.cols = TableService.create.cols; //width (size of array[])
+    
+        for(i=0;i<$scope.rows;i++){
+            var curr = [];
+            for(j=0;j<$scope.cols;j++){
+                curr[j] = {
+                    position:i+","+j,
+                    items : []
+                };
+            }
+            $scope.arr.push(curr);
+        }
+        console.log($scope.arr);
+        
+        $scope.resize = function(){
+            console
+            if(TableService.rows==$scope.rows && TableService.cols==$scope.cols)
+                return;
+            
+            if($scope.rows>10 || $scope.cols>20){
+                alert("size is too large!");
+                return;
+            }
+            
+            TableService.create.rows = $scope.rows;
+            TableService.create.cols = $scope.cols;
+            $route.reload();
+        }
+        
+    
+        $scope.onDropComplete=function(data,evt){
+//            console.log(evt.event.target.innerText);
+//            console.log(evt.event.target);
+            console.log($scope.rows);
+//            console.log("---"+targetID);
+            if(targetID=="remove"){
+                console.log("remove fired");
+                return;
+            }
+            
+            //drop new table
+            var targetID = $(evt.event.target).attr("targetID");
+            targetID = targetID.substring(0,targetID.length);
+            var coordinate = targetID.split(",");
+            coordinate[0] = parseInt(coordinate[0]);
+            coordinate[1] = parseInt(coordinate[1]);
+            var current = $scope.arr[coordinate[0]][coordinate[1]];
+            var newObj = angular.copy(data);
+            newObj.host = coordinate;
+            current.items = [];
+            current.items.push(newObj);
+            console.log(current.items);
+        }
+        
+        $scope.onDragSuccess1=function(data,evt){
+            var targetID = $(evt.event.target).attr("targetID");
+            console.log(evt);
+        }
+        $scope.pro = function(data,evt){
+            var coord = data.host;
+            console.log(coord);
+            if(data.host == null)
+                return;
+            var current = $scope.arr[coord[0]][coord[1]];
+            current.items = [];
+        }
+        
+        $scope.saveLayout = function(){
+            var arr = $scope.arr;
+            var masterArr = [];
+            var count = 0
+            for(i=0;i<arr.length;i++){
+                var curr = [];
+                for(j=0;j<arr[0].length;j++){
+                    if(arr[i][j].items.length==1){
+                        count+=1;
+                        curr.push(true);
+                    }
+                    else
+                        curr.push(false);
+                }
+                masterArr.push(curr);
+            }
+            
+            var master1  = {};
+            master1.Arr = masterArr;
+            master1.Name = $scope.Name;
+            master1.Active = false;
+            master1.Tables = count;
+            console.log(master1);
+            // TableService.CreateTable(master1);
+            
+        }
+    
+}]);
+
+//Table Service
+webApp.factory('TableService',function($http,SERVER){
+    var o = {
+        create: {rows:6,cols:12},
+        data: [
+            {Arr:[ 
+                [true,true,false,false,true,true,false,false,true,true,false,false,true,true,false,false,true,true,false,false],
+                [true,true,false,false,true,true,false,false,true,true,false,false,true,true,false,false,true,true,false,false],
+[true,true,false,false,true,true,false,false,true,true,false,false,true,true,false,false,true,true,false,false],
+[true,true,false,false,true,true,false,false,true,true,false,false,true,true,false,false,true,true,false,false],
+[true,true,false,false,true,true,false,false,true,true,false,false,true,true,false,false,true,true,false,false],
+[true,true,false,false,true,true,false,false,true,true,false,false,true,true,false,false,true,true,false,false],
+[true,true,false,false,true,true,false,false,true,true,false,false,true,true,false,false,true,true,false,false],
+[true,true,false,false,true,true,false,false,true,true,false,false,true,true,false,false,true,true,false,false],
+[true,true,false,false,true,true,false,false,true,true,false,false,true,true,false,false,true,true,false,false],
+[true,true,false,false,true,true,false,false,true,true,false,false,true,true,false,false,true,true,false,false],
+            
+            ], Active:true,Name:"Christmas Arrangement",ID:"05",Tables:100},
+            {Arr:[ 
+                [true,true,false,false,true,true,false,false,true,true,false,false,true,true,false,false,true,true,false,false],
+                [true,true,false,false,true,true,false,false,true,true,false,false,true,true,false,false,true,true,false,false],
+[true,true,false,false,true,true,false,false,true,true,false,false,true,true,false,false,true,true,false,false],
+[true,true,false,false,true,true,false,false,true,true,false,false,true,true,false,false,true,true,false,false],
+[true,true,false,false,true,true,false,false,true,true,false,false,true,true,false,false,true,true,false,false],
+[true,true,false,false,true,true,false,false,true,true,false,false,true,true,false,false,true,true,false,false],
+[true,true,false,false,true,true,false,false,true,true,false,false,true,true,false,false,true,true,false,false],
+[true,true,false,false,true,true,false,false,true,true,false,false,true,true,false,false,true,true,false,false],
+[true,true,false,false,true,true,false,false,true,true,false,false,true,true,false,false,true,true,false,false],
+[true,true,false,false,true,true,false,false,true,true,false,false,true,true,false,false,true,true,false,false],
+            
+            ], Active:false,Name:"Default Arrangement",ID:"08",Tables:100}
+              ],
+        currentItem:{},
+    }
+    return o;
+})
 
 //Menu Controller
 webApp.controller('MenuController', ['$window','SupplierService','$scope','$uibModal', function($window,SupplierService,$scope,$modal){

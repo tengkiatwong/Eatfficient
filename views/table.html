@@ -1,1 +1,41 @@
-<h1>Table</h1>
+<div class="container" style="padding-top:2em;">
+    <h2 style="display:inline;padding-right:2em">Table Management</h2>
+    <div style="display:inline">
+                <a class="btn btn-success" href="#/table/create">
+                    <span class="glyphicon glyphicon-plus"></span>
+                    Create new
+                </a>
+        </div>
+    <div class="list-group" style="padding-top:1.4em">
+        <a href="#/table/{{item.ID}}" class="list-group-item" ng-repeat="item in arrs" ng-click="up(item.ID)">
+            <div class="row">
+                <h4 class="col-md-4 col-sm-4">{{item.Name}}</h4>
+                <button class="btn btn-primary col-md-1 col-sm-1" ng-if="item.Active==true">Active</button>
+                <div class="pull-right" style="font-size:1.4em;padding-right:2em">Tables used: {{item.Tables}}</div>
+            </div>
+            <hr style="padding:0;margin-top:5px">
+            <div class="row" ng-repeat="row in item.Arr" style="padding-left:2em">
+                <div class="col-md-1 grid" ng-repeat="col in row track by $index" ng-class="{'table':col==true}">
+                </div>
+            </div>
+        </a>
+    </div>
+
+
+</div>
+
+
+<style>
+
+.grid {
+    border: 1px solid black;
+    height: 2em;
+    width: 2em
+}
+
+.table {
+    background-color:mediumpurple;
+    margin:0;
+}
+
+</style>

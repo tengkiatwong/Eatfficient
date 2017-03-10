@@ -57,6 +57,15 @@ webApp.config(['$routeProvider', function($routeProvider) {
             templateUrl: 'views/table.html',
             controller: 'TableController'
         })
+        .when('/table/create',{
+            templateUrl: 'views/tableCreate.html',
+            controller: 'TableCreateController'
+        })
+        .when('/table/:arrID',{
+            templateUrl: 'views/tableEdit.html',
+            controller: 'TableEditController'
+        })
+        
     
         //otherwise
 		.otherwise({

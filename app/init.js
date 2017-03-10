@@ -1,4 +1,4 @@
-webApp = angular.module('WebApp', ['ngRoute', 'ui.bootstrap']);
+webApp = angular.module('WebApp', ['ngRoute', 'ui.bootstrap','ngDraggable']);
 
 webApp.run(function($rootScope) {
 	$rootScope.$on('$routeChangeSuccess', function(ev, data) {
