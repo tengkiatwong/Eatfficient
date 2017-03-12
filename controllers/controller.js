@@ -651,58 +651,59 @@ webApp.controller('TableEditController', ['$route','TableService','$window','$sc
     }
         
     
-        $scope.onDropComplete=function(data,evt){;
-            //drop new table
-            var targetID = $(evt.event.target).attr("targetID");
-            targetID = targetID.substring(0,targetID.length);
-            var coordinate = targetID.split(",");
-            coordinate[0] = parseInt(coordinate[0]);
-            coordinate[1] = parseInt(coordinate[1]);
-            var current = $scope.arr[coordinate[0]][coordinate[1]];
-            var newObj = angular.copy(data);
-            newObj.host = coordinate;
-            current.items = [];
-            current.items.push(newObj);
-                        
-        }
-        
-        $scope.onDragSuccess1=function(data,evt){
-            var targetID = $(evt.event.target).attr("targetID");
-        }
-        $scope.pro = function(data,evt){
-            console.log(data);
-            var coord = data.host;
-            console.log(coord);
-            if(data.host == null)
-                return;
-            var current = $scope.arr[coord[0]][coord[1]];
-            current.items = [];
-        }
-        
-        $scope.saveLayout = function(){
-            var arr = $scope.arr;
-            var masterArr = [];
-            var count = 0;
-            for(i=0;i<arr.length;i++){
-                var curr = [];
-                for(j=0;j<arr[0].length;j++){
-                    if(arr[i][j].items.length==1){
-                        curr.push(true);
-                        count+=1;
-                    }
-                    
-                    else
-                        curr.push(false);
+    $scope.onDropComplete=function(data,evt){;
+        //drop new table
+        var targetID = $(evt.event.target).attr("targetID");
+        targetID = targetID.substring(0,targetID.length);
+        var coordinate = targetID.split(",");
+        coordinate[0] = parseInt(coordinate[0]);
+        coordinate[1] = parseInt(coordinate[1]);
+        var current = $scope.arr[coordinate[0]][coordinate[1]];
+        var newObj = angular.copy(data);
+        newObj.host = coordinate;
+        current.items = [];
+        current.items.push(newObj);
+
+    }
+
+    $scope.onDragSuccess1=function(data,evt){
+        var targetID = $(evt.event.target).attr("targetID");
+    }
+    $scope.pro = function(data,evt){
+        console.log(data);
+        var coord = data.host;
+        console.log(coord);
+        if(data.host == null)
+            return;
+        var current = $scope.arr[coord[0]][coord[1]];
+        current.items = [];
+    }
+
+    $scope.saveLayout = function(){
+        var arr = $scope.arr;
+        var masterArr = [];
+        var count = 0;
+        for(i=0;i<arr.length;i++){
+            var curr = [];
+            for(j=0;j<arr[0].length;j++){
+                if(arr[i][j].items.length==1){
+                    curr.push(true);
+                    count+=1;
                 }
-                masterArr.push(curr);
+
+                else
+                    curr.push(false);
             }
-            var master1  = {};
-            master1.Arr = masterArr;
-            master1.Name = $scope.currentItem.Name;
-            master1.Active = false;
-            master1.Tables = count;
-            console.log(master1);
+            masterArr.push(curr);
         }
+        var master1  = {};
+        master1.ID = $scope.currentItem.ID;
+        master1.Arr = masterArr;
+        master1.Name = $scope.currentItem.Name;
+        master1.Active = false;
+        master1.Tables = count;
+        console.log(master1);
+    }
     
 }]);
 
@@ -846,36 +847,75 @@ webApp.factory('TableService',function($http,SERVER){
 })
 
 //Menu Controller
-webApp.controller('MenuController', ['$window','SupplierService','$scope','$uibModal', function($window,SupplierService,$scope,$modal){
-
-//	$scope.suppliers = [
-//        {supplierId:1,name:"Fresh Steak Gods",contactNumber:91239124,type:"Steak"},
-//        {supplierId:2,name:"VegeFarm",contactNumber:99999999,type:"Vegetables"}
-//    ];
-    $scope.suppliers;
-    SupplierService.getOrders().then(function(response) {
-//        $scope.result = response.data;
-        $scope.ingredientsList = response.data;
-        $scope.items = response.data
-        $scope.suppliers = response.data;
-    }, function(error) {
-        console.log('opsssss' + error);
-    });
-    $scope.items = $scope.suppliers;
+webApp.controller('MenuController', ['$window','MenuService','$scope','$uibModal', function($window,MenuService,$scope,$modal){
+    
+    $scope.menus = MenuService.menus;
+    $scope.monthNames = ["filler","January", "February", "March", "April", "May", "June",
+  "July", "August", "September", "October", "November", "December"];
+//    SupplierService.getOrders().then(function(response) {
+////        $scope.result = response.data;
+//        $scope.ingredientsList = response.data;
+//        $scope.items = response.data
+//        $scope.suppliers = response.data;
+//    }, function(error) {
+//        console.log('opsssss' + error);
+//    });
+    $scope.items = $scope.menus;
     
     //modal
-    $scope.getDetails = function(supplierId){
+    $scope.getForecasts = function(){
         $modal.open({
-                templateUrl: 'supplierDetails.html',
-                controller: ['SupplierService','$scope', '$uibModalInstance','items', function (SupplierService,$scope, $instance, items) {
+                templateUrl: 'forecasts.html',
+                controller: ['MenuService','$scope', '$uibModalInstance','items', function (MenuService,$scope, $instance, items) {
+                    $scope.forecasts = MenuService.forecasts;
+                    $scope.currentForecast = $scope.forecasts[0];
+                    $scope.selectForecast;
+                    
+                    $scope.updateCurrent = function(){
+                        for(i=0;i<$scope.forecasts.length;i++){
+                            if($scope.forecasts[i].Name == $scope.selectForecast)
+                                $scope.currentForecast = $scope.forecasts[i];
+                        }
+                    }
+                    
+                    
+                    
+                    
+                    $scope.ok = function () {
+                        SupplierService.currentItem = $scope.selectedItem;
+                        $instance.close($scope.selected.item);
+                    };
+
+                    $scope.cancel = function () {
+                        $instance.dismiss('cancel');
+                    };
+                }],
+                size: 'lg',
+                resolve: {
+                    items: function () {
+                        return $scope.items;
+                    }
+                }
+            }).result.then(function (selectedItem) {
+                $scope.selected = {fruit: selectedItem}
+            }, function () {
+                //console.log('Modal dismissed at: ' + new Date());
+            });
+    }
+    
+     $scope.getDetails = function(){
+        console.log("hello");
+        $modal.open({
+                templateUrl: 'forecasts.html',
+                controller: ['MenuService','$scope', '$uibModalInstance','items', function (MenuService,$scope, $instance, items) {
 
                     $scope.items = items;
                     $scope.selectedItem;;
-                    for(i = 0; i<items.length; i++){
-                        if(items[i].supplierId == supplierId){
-                            $scope.selectedItem=items[i];
-                        }
-                    }
+//                    for(i = 0; i<items.length; i++){
+//                        if(items[i].supplierId == supplierId){
+//                            $scope.selectedItem=items[i];
+//                        }
+//                    }
                     $scope.selected = {
                         item: $scope.items[0]
                     };
@@ -913,6 +953,120 @@ webApp.controller('MenuController', ['$window','SupplierService','$scope','$uibM
     }
     
 }]);
+
+webApp.factory('MenuService', function($http,SERVER) {
+   
+    var o = {
+        state: 0,
+        menus: [
+            {ID:5,Name:"Christmas Menu",DateCreated:"12/05/2017",Active:true,
+                MainDishes:["Steak","Fish & Chips","Garden Salad","Salmon Fillet","Escargot"],
+                Appetisers:["Kimchi","Radish","Peas & Pods","Truffle Fries"],
+                Drinks:["Coke","Mountain Dew","Pepsi","Root Beer"],
+                Desserts:["Ice-cream","Peanut Bingsu","Mochi","Peaches"],
+                SideDishes:["French Fries","Onion Rings","Coleslaw","Mac & Cheese"],
+                BasedOn:"December 2017",
+                StartDate: "1/12/2017",
+                EndDate: "31/12/2017"
+            },
+            {ID:5,Name:"January Menu",DateCreated:"12/12/2017",Active:false,
+                MainDishes:["Steak","Fish & Chips","Garden Salad","Salmon Fillet","Escargot","Filler","Filler"],
+                Appetisers:["Kimchi","Radish","Peas & Pods","Truffle Fries","Filler"],
+                Drinks:["Coke","Mountain Dew","Pepsi","Root Beer","Filler","Filler","Filler","Filler"],
+                Desserts:["Ice-cream","Peanut Bingsu","Mochi","Peaches","Filler","Filler"],
+                SideDishes:["French Fries","Onion Rings","Coleslaw","Mac & Cheese","Filler"],
+                BasedOn:"January 2018",
+                StartDate: "1/12/2017",
+                EndDate: "31/12/2017"
+            }
+        ],
+        forecasts: [
+            {ID:5,Name:"Christmas Menu",DateCreated:"12/05/2017",
+                MainDishes:["Steak","Fish & Chips","Garden Salad","Salmon Fillet","Escargot"],
+                Appetisers:["Kimchi","Radish","Peas & Pods","Truffle Fries"],
+                Drinks:["Coke","Mountain Dew","Pepsi","Root Beer"],
+                Desserts:["Ice-cream","Peanut Bingsu","Mochi","Peaches"],
+                SideDishes:["French Fries","Onion Rings","Coleslaw","Mac & Cheese"],
+                StartDate: "1/12/2017",
+                EndDate: "31/12/2017",
+                LastUpdated:"10/08/2016"
+            },
+             {ID:5,Name:"January Menu",DateCreated:"12/05/2017",
+                MainDishes:["Steak","Fish & Chips","Garden Salad","Salmon Fillet","Escargot"],
+                Appetisers:["Kimchi","Radish","Peas & Pods","Truffle Fries"],
+                Drinks:["Coke","Mountain Dew","Pepsi","Root Beer"],
+                Desserts:["Ice-cream","Peanut Bingsu","Mochi","Peaches"],
+                SideDishes:["French Fries","Onion Rings","Coleslaw","Mac & Cheese"],
+                StartDate: "1/01/2017",
+                EndDate: "31/02/2017",
+                lastUpdated:"10/09/2016"
+            },
+             {ID:5,Name:"March Menu",DateCreated:"12/05/2017",
+                MainDishes:["Steak","Fish & Chips","Garden Salad","Salmon Fillet","Escargot"],
+                Appetisers:["Kimchi","Radish","Peas & Pods","Truffle Fries"],
+                Drinks:["Coke","Mountain Dew","Pepsi","Root Beer"],
+                Desserts:["Ice-cream","Peanut Bingsu","Mochi","Peaches"],
+                SideDishes:["French Fries","Onion Rings","Coleslaw","Mac & Cheese"],
+                StartDate: "1/03/2017",
+                EndDate: "31/06/2017",
+                lastUpdated:"10/12/2016"
+            },
+        ],
+    };
+    
+    o.createMenu = function(dataObj){
+        console.log(dataObj);
+        return $http({
+            method: 'GET',
+            url:SERVER.url+'/TestEnterprise-war/webresources/ejb.SupplierRestful/createSupplier',
+            params: dataObj,
+        }).success(function(data){
+            //console.log(data);
+            o.orders = data;
+        });
+    }
+    
+     o.getMenu = function(){
+        return $http({
+            method: 'GET',
+            url:SERVER.url+'/TestEnterprise-war/webresources/ejb.SupplierRestful/getAllSuppliers',
+//            params: {param1: "ULTRAMAN KangKong"}
+        }).success(function(data){
+            console.log(data);
+            o.orders = data;
+        });
+    }
+     
+     o.editMenu = function(dataObj){
+         console.log("---");
+         console.log(dataObj);
+        return $http({
+            method: 'GET',
+            url:SERVER.url+'/TestEnterprise-war/webresources/ejb.SupplierRestful/editSupplier',
+            params: dataObj
+        }).success(function(data){
+            console.log(data);
+            o.orders = data;
+        });
+    }
+     
+     o.deleteMenu= function(dataObj){
+         console.log("---");
+         console.log(dataObj);
+        return $http({
+            method: 'GET',
+            //change URL to delete
+            url:SERVER.url+'/TestEnterprise-war/webresources/ejb.SupplierRestful/deleteSupplier',
+            params: dataObj
+        }).success(function(data){
+            console.log(data);
+            o.orders = data;
+        });
+    }
+     
+    return o;
+})
+
 
 //Supplier Service
 webApp.factory('SupplierService', function($http,SERVER) {

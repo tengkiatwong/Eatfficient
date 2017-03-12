@@ -1,1 +1,176 @@
-<h1>Menu</h1>
+<div class="container" style="padding-top:2em">
+    <!-- Top Row   -->
+    <div>
+    <div style="font-size:2em;padding-right:1em;display:inline;"><i class="glyphicon glyphicon-list-alt"></i> Menu Management</div>
+    <div style="display:inline">
+                <button class="btn btn-primary" ng-click="getForecasts()">
+                    <span class="glyphicon glyphicon-calendar"></span>
+                    View Forecasts
+                </button>
+        </div>
+        <div style="display:inline">
+                <a class="btn btn-success" href="#/purchaseOrders/create">
+                    <span class="glyphicon glyphicon-plus"></span>
+                    Create new
+                </a>
+        </div>
+    </div>
+    
+    <!-- List View   -->
+    <div class="list-group" style="padding-top:2em">
+      <a href="#" class="list-group-item" ng-repeat="menu in menus">
+          
+          <div>
+              <div style="display:inline;font-size:2.5em;">
+                  {{ menu.Name }}
+                  <span style="font-size:0.5em;padding-left:1em">{{menu.BasedOn}} forecast</span>
+              </div>
+              <button class="btn btn-primary pull-right" style="display:inline" ng-if="menu.Active==true">Active</button>
+          </div>
+          
+          <div class="row dataRow">
+            <div class="col-md-2 text-center box">
+                <div class="boxHeader">Main Dishes</div>
+                <div class="text-center boxData">{{menu.MainDishes.length}}</div>
+            </div>
+            <div class="col-md-2 text-center box">
+                <div class="boxHeader">Appetisers</div>
+                <div class="text-center boxData">{{menu.Appetisers.length}}</div>
+            </div>
+            <div class="col-md-2 text-center box">
+                <div class="boxHeader">Drinks</div>
+                <div class="text-center boxData">{{menu.Drinks.length}}</div>
+            </div>
+            <div class="col-md-2 text-center box">
+                <div class="boxHeader">Desserts</div>
+                <div class="text-center boxData">{{menu.Desserts.length}}</div>
+            </div>
+            <div class="col-md-1 pull-right">
+                <div class="text-center">End</div>
+                <time datetime="2013-12-25" class="icon">
+                  <em>{{monthNames[ (menu.EndDate.split("/"))[1] ]}}</em>
+                  <strong>{{ (menu.EndDate.split("/"))[2] }}</strong>
+                  <span>{{ (menu.EndDate.split("/"))[0]}}</span>
+                </time>  
+            </div>
+              <div class="col-md-1 pull-right">
+                <div class="text-center">Start</div>
+                <time datetime="2013-12-25" class="icon">
+                  <em>December</em>
+                  <strong>2017</strong>
+                  <span>1</span>
+                </time>  
+            </div>
+          </div>
+          
+      </a>
+        
+    </div>
+    
+</div>
+
+<script type="text/ng-template" id="forecasts.html">
+	<div class="modal-header" style="background-color:#139970;color:white">
+        <div style="font-size:2em;display:inline">Forecasts</div>
+	</div>
+    
+	<div class="modal-body">
+        <div>
+            Select Forecast &nbsp;
+            <select name="forecasts" ng-model="selectForecast" ng-change="updateCurrent()">
+              <option ng-repeat="forecast in forecasts" value="{{forecast.Name}}">{{forecast.StartDate}} : {{forecast.Name}}</option>
+            </select>
+        </div>
+        <hr>
+        <div>
+            <h3>{{currentForecast.Name}}
+                <span style="font-size:0.5em;color:grey"> Last updated: {{currentForecast.LastUpdated}}</span>
+            </h3>
+        </div>
+    </div>
+    
+	<div class="modal-footer">
+		<button class="btn btn-default" ng-click="cancel()">
+            <span class="glyphicon glyphicon-eye-close"></span> Cancel
+        </button>
+	</div>
+</script>
+
+
+
+
+
+
+
+
+
+<style>
+    
+    .dataRow{
+/*        padding-left:1em;*/
+        padding-top:1em;
+    }
+    .box{
+/*        border:1px solid black;*/
+        border-right: 1px solid black;
+/*        border-radius:1.5em;*/
+    }
+    .boxHeader{
+        font-size:1.2em;
+        padding-top:0.5em;
+    }
+    .boxData{
+        font-size:3em;
+        color:mediumpurple
+    }
+    
+    time.icon
+{
+  font-size: 0.7em; /* change icon size */
+  display: block;
+  position: relative;
+  width: 7em;
+  height: 7em;
+  background-color: #fff;
+  border-radius: 0.6em;
+  box-shadow: 0 1px 0 #bdbdbd, 0 2px 0 #fff, 0 3px 0 #bdbdbd, 0 4px 0 #fff, 0 5px 0 #bdbdbd, 0 0 0 1px #bdbdbd;
+  overflow: hidden;
+}
+
+time.icon *
+{
+  display: block;
+  width: 100%;
+  font-size: 1.2em;
+  font-weight: bold;
+  font-style: normal;
+  text-align: center;
+}
+
+time.icon strong
+{
+  position: absolute;
+  top: 0;
+  padding: 0.1em 0;
+  color: #fff;
+  background-color: /* #fd9f1b; */ #ff3f3f;
+  border-bottom: 1px dashed /* #f37302 */#990000;
+  box-shadow: 0 2px 0 /* #fd9f1b */#ff0000;
+}
+
+time.icon em
+{
+  position: absolute;
+  bottom: 0em;
+  color: /* #fd9f1b */#008000;
+}
+
+time.icon span
+{
+  font-size: 2.8em;
+  letter-spacing: -0.05em;
+  padding-top: 0.8em;
+  color: #2f2f2f;
+}
+    
+</style>
