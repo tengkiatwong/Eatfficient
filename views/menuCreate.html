@@ -1,0 +1,184 @@
+
+
+<div class="container" style="margin:2em">
+    <div style="padding-bottom:2em">
+        <div style="font-size:2em;display:inline;padding-right:1em">Menu Creation</div>
+        <div style="display:inline">
+        <button class="btn btn-primary" ng-click="createMenu()" ng-disabled="newTableForm.$invalid">
+            <span class="glyphicon glyphicon-save"></span>
+            Save
+        </button>
+        </div>
+    </div>
+    <!--  Name Input and forecast input  -->
+    <div class="row" style="font-size:1.4em;padding-bottom:2em">
+        <div class="col-md-3">
+            <label>Name</label>
+          <form name="newTableForm">
+              <span class="glyphicon glyphicon-pencil"></span> 
+              <input type="text" ng-model="Name" placeholder="Name" style="width:12em" required>
+          </form>
+      </div>
+        <!--  Select forecast to base on      -->
+        <div class="col-md-9 row">
+<!--
+            Select Forecast &nbsp;
+            <select name="forecasts" ng-model="selectForecast" ng-change="updateCurrent()">
+              <option ng-repeat="forecast in forecasts" value="{{forecast.Name}}">{{forecast.StartDate}} : {{forecast.Name}}        </option>
+            </select>
+-->
+            <div class="control-group col-md-4">
+              <label>Start Date</label>
+              <div class="controls">
+<!--                <input type="text" class="form-control" ng-model="newRecord.PurchaseDate" required>-->
+                  <script> 
+                    $(function() { 
+                        $( "#datepicker" ).datepicker(); 
+                    }); 
+                    </script> 
+                    <input type="text" id="datepicker" ng-model="StartDate" placeholder="Start" required>
+              </div>
+        </div> 
+        
+        <div class="control-group col-md-4">
+              <label>End Date</label>
+              <div class="controls">
+<!--                <input type="text" class="form-control" ng-model="newRecord.PurchaseDate" required>-->
+                  <script> 
+                    $(function() { 
+                        $( "#datepicker2" ).datepicker(); 
+                    }); 
+                    </script>
+                  <input type="text" id="datepicker2" ng-model="EndDate" placeholder="End" required>
+              </div>
+        </div>
+        </div>
+    </div>
+    
+    <!-- Date Pickers   -->
+    <div class="row text-center" style="font-size:1.5em;padding-bottom:1em">
+        Forecast &nbsp;
+            <select name="forecasts" ng-model="selectForecast" ng-change="updateCurrent()">
+              <option ng-repeat="forecast in forecasts" value="{{forecast.Name}}">{{forecast.StartDate}} : {{forecast.Name}}        </option>
+            </select>
+    
+    </div>
+    
+    <div style="display:none" id="menupicker">
+        <div class="row">
+            <div class="row col-md-6 text-center">
+                <h4>Main Dishes</h4>
+                <div class="col-md-5" style="padding:0">
+    <!--                <label for="aclients">AA</label>                                -->
+                    <p>Select From</p>
+                    <select size="12" multiple ng-model="available" ng-options="client for client in mains" style="width:14em"></select>         
+                </div> 
+
+                <div class="col-md-2 text-center" style="padding-top:2em">
+                    <p style="color:white">_</p>
+                    <input id="moveright" type="button" value="+" ng-click="moveItem(available, mains,selectedmains)" style="font-size:1.5em;width:2em"/>
+                    <div style="padding:0.5em"></div>
+    <!--                <input id="moverightall" type="button" value="Add All Clients" ng-click="moveAll(availableclients,selectedclients)" />-->
+                    <input id="move left" type="button" value="-" ng-click="moveItem(selected, selectedmains,mains)" style="font-size:1.5em;width:2em"/>    
+    <!--                <input id="moveleftall" type="button" value="Remove All Clients" ng-click="moveAll(selectedclients,availableclients)" />-->
+                </div>
+
+                <div class="col-md-5" style="padding:0">
+    <!--            <label for="sclients">Selected Clients</label>                          -->
+                    <p>Selected Dishes</p>
+                    <select size="12" multiple ng-model="selected" ng-options="client for client in selectedmains" style="width: 14em"></select>
+                </div>
+            </div>
+
+    <!--        -->
+
+            <div class="row col-md-6 text-center">
+                <h4>Appetisers</h4>
+                <div class="col-md-5" style="padding:0">
+    <!--                <label for="aclients">AA</label>                                -->
+                    <p>Select From</p>
+                    <select size="12" multiple ng-model="available" ng-options="client for client in apps" style="width:14em"></select>         
+                </div> 
+
+                <div class="col-md-2 text-center" style="padding-top:2em">
+                    <p style="color:white">_</p>
+                    <input id="moveright" type="button" value="+" ng-click="moveItem(available, apps,selectedapps)" style="font-size:1.5em;width:2em"/>
+                    <div style="padding:0.5em"></div>
+    <!--                <input id="moverightall" type="button" value="Add All Clients" ng-click="moveAll(availableclients,selectedclients)" />-->
+                    <input id="move left" type="button" value="-" ng-click="moveItem(selected, selectedapps,apps)" style="font-size:1.5em;width:2em"/>    
+    <!--                <input id="moveleftall" type="button" value="Remove All Clients" ng-click="moveAll(selectedclients,availableclients)" />-->
+                </div>
+
+                <div class="col-md-5" style="padding:0">
+    <!--            <label for="sclients">Selected Clients</label>                          -->
+                    <p>Selected Dishes</p>
+                    <select size="12" multiple ng-model="selected" ng-options="client for client in selectedapps" style="width: 14em"></select>
+                </div>
+            </div>
+
+
+</div>
+
+        <div class="row">
+        <div class="row col-md-6 text-center">
+            <h4>Drinks</h4>
+            <div class="col-md-5" style="padding:0">
+<!--                <label for="aclients">AA</label>                                -->
+                <p>Select From</p>
+                <select size="12" multiple ng-model="available" ng-options="client for client in drinks" style="width:14em"></select>         
+            </div> 
+            
+            <div class="col-md-2 text-center" style="padding-top:2em">
+                <p style="color:white">_</p>
+                <input id="moveright" type="button" value="+" ng-click="moveItem(available, drinks,selecteddrinks)" style="font-size:1.5em;width:2em"/>
+                <div style="padding:0.5em"></div>
+<!--                <input id="moverightall" type="button" value="Add All Clients" ng-click="moveAll(availableclients,selectedclients)" />-->
+                <input id="move left" type="button" value="-" ng-click="moveItem(selected, selecteddrinks,drinks)" style="font-size:1.5em;width:2em"/>    
+<!--                <input id="moveleftall" type="button" value="Remove All Clients" ng-click="moveAll(selectedclients,availableclients)" />-->
+            </div>
+                
+            <div class="col-md-5" style="padding:0">
+<!--            <label for="sclients">Selected Clients</label>                          -->
+                <p>Selected Dishes</p>
+                <select size="12" multiple ng-model="selected" ng-options="client for client in selecteddrinks" style="width: 14em"></select>
+            </div>
+        </div>
+        
+<!--        -->
+        
+        <div class="row col-md-6 text-center">
+            <h4>Desserts</h4>
+            <div class="col-md-5" style="padding:0">
+<!--                <label for="aclients">AA</label>                                -->
+                <p>Select From</p>
+                <select size="12" multiple ng-model="available" ng-options="client for client in desserts" style="width:14em"></select>         
+            </div> 
+            
+            <div class="col-md-2 text-center" style="padding-top:2em">
+                <p style="color:white">_</p>
+                <input id="moveright" type="button" value="+" ng-click="moveItem(available, desserts,selecteddesserts)" style="font-size:1.5em;width:2em"/>
+                <div style="padding:0.5em"></div>
+<!--                <input id="moverightall" type="button" value="Add All Clients" ng-click="moveAll(availableclients,selectedclients)" />-->
+                <input id="move left" type="button" value="-" ng-click="moveItem(selected, selecteddesserts,desserts)" style="font-size:1.5em;width:2em"/>    
+<!--                <input id="moveleftall" type="button" value="Remove All Clients" ng-click="moveAll(selectedclients,availableclients)" />-->
+            </div>
+                
+            <div class="col-md-5" style="padding:0">
+<!--            <label for="sclients">Selected Clients</label>                          -->
+                <p>Selected Dishes</p>
+                <select size="12" multiple ng-model="selected" ng-options="client for client in selecteddesserts" style="width: 14em"></select>
+            </div>
+        </div>
+<!--
+    
+    
+    <div>Selected Clients: {{selectedmains}}</div>
+            <div>Available Clients: {{mains}}</div>
+            <div>Selected: {{selected}}</div>
+            <div>Available: {{available}}</div>
+-->
+
+</div>
+    </div>
+</div>
+

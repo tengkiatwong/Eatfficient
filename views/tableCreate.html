@@ -15,9 +15,9 @@
         user-select: none;
     }
     [ng-drag]{
-        width: 4em;
-        height: 4em;
-        background:rgba(149, 66, 224, 0.5);
+        width: 3em;
+        height: 3em;
+        background:rgba(135,229,255, 0.5);
         color:white;
         text-align: center;
         padding-top:40px;
@@ -47,8 +47,8 @@
     [ng-drop]{
         background: rgba(250, 250, 250, 0.5);
         text-align: center;
-        width: 4em;
-        height: 4em;
+        width: 3em;
+        height: 3em;
         display: block;
         position: relative;
         padding-left: 0;
@@ -80,31 +80,38 @@
 
   </style>
 </head>
-<body ng-app="ExampleApp">
+<body>
 
-  <div class="container">
-      <div style="font-size:2em">
-          <form name="newTableForm">
+  <div class="container" style="padding-top:2em">
+      <div style="font-size:1.3em">
+          <form name="newTableForm" style="display:inline">
         <span class="glyphicon glyphicon-pencil"></span> <input type="text" ng-model="Name" placeholder="Name" style="width:12em" required>
         </form>
+          <button class="btn btn-success" ng-disabled="newTableForm.$invalid" ng-click="saveLayout()"><span class="glyphicon glyphicon-save"></span>Save</button>
       </div>
       <div class="row" style="padding-top:1em">
-        <ul class="draggable-objects col-md-2" style="padding: 0;border:1px solid black;border-radius:2em">
+        <ul class="draggable-objects col-md-2" style="padding: 0;border-radius:2em">
             <p style="text-align:center">Tables</p>
             <li  ng-repeat="obj in draggableObjects" >
                 <div ng-drag="true" ng-drag-data="obj" data-allow-transform="true"> {{obj.name}} </div>
             </li>
         </ul>
-          <div class="col-md-1"></div>
-            <div ng-drop="true" targetID="remove" ng-drop-success="pro($data,$event)" style="background-color:pink;width:10em;height:7em;color:white;border-radius:2em;" class="col-md-6">Remove Zone</div>
-          <div class="col-md-4">
+            <div ng-drop="true" targetID="remove" ng-drop-success="pro($data,$event)" style="width:10em;height:7em;color:white;border-radius:2em;padding-top:2em" class="col-md-6">
+                <img src="/assets/dustbin.png" style="height:3em">
+
+          </div>
+          <div class="col-md-4 row">
            <form>
-            Rows:<input type="number" name="FirstName" ng-model="rows"><br>
-            Cols: <input type="number" name="LastName" ng-model="cols"><br>
-            <button class="btn btn-primary" ng-click="resize()">Resize</button>
+            <div class="col-md-6">
+                Rows:<input type="number" name="FirstName" ng-model="rows"><br>
+                Cols: <input type="number" name="LastName" ng-model="cols"><br>
+            </div>
+               <div class="col-md-6">
+            <button class="btn btn-primary" ng-click="resize()"><span class="glyphicon glyphicon-resize-full"></span></button>
+                </div>
             </form>
           </div>
-          <button class="btn btn-success" ng-disabled="newTableForm.$invalid" ng-click="saveLayout()">Save</button>
+          
       </div>
 <div ng-repeat="i in arr" class="row">
       <div ng-drop="true" ng-drop-success="onDropComplete($data,$event)" ng-repeat="e in i" targetID = {{e.position}} class="col-md-1 col-sm-1" style="border: 1px solid black">

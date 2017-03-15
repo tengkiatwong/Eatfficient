@@ -15,8 +15,8 @@
         user-select: none;
     }
     [ng-drag]{
-        width: 4em;
-        height: 4em;
+        width: 3em;
+        height: 3em;
         background:rgba(149, 66, 224, 0.5);
         color:white;
         text-align: center;
@@ -47,8 +47,8 @@
     [ng-drop]{
         background: rgba(250, 250, 250, 0.5);
         text-align: center;
-        width: 4em;
-        height: 4em;
+        width: 3em;
+        height: 3em;
         display: block;
         position: relative;
         padding-left: 0;
@@ -80,11 +80,12 @@
 
   </style>
 </head>
-<body ng-app="ExampleApp">
+<body>
 
-  <div class="container">
+  <div class="container" style="padding-top:2em">
       <div style="font-size:2em">
-        <span class="glyphicon glyphicon-pencil"></span> <input type="text" ng-model="currentItem.Name" style="width:12em">
+        <span class="glyphicon glyphicon-pencil"></span> <input type="text" ng-model="currentItem.Name" style="width:12em;display:inline">
+          <button class="btn btn-success" style="display:inline;font-size:0.5em" ng-click="saveLayout()"><span class="glyphicon glyphicon-save"></span> Save</button>
       </div>
       <div class="row" style="padding-top:1em">
         <ul class="draggable-objects col-md-2" style="padding: 0;border:1px solid black;border-radius:2em">
@@ -104,7 +105,6 @@
             </form>
 -->
           </div>
-          <button class="btn btn-success" ng-click="saveLayout()">Save</button>
       </div>
 <div ng-repeat="i in arr" class="row">
       <div ng-drop="true" ng-drop-success="onDropComplete($data,$event)" ng-repeat="e in i" targetID = {{e.position}} class="col-md-1 col-sm-1" style="border: 1px solid black">

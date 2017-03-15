@@ -592,7 +592,9 @@ webApp.factory('RecordService',function($http,SERVER){
 webApp.controller('TableController', ['$route','TableService','$window','$scope','$uibModal', function($route,TableService,$window,$scope,$modal){
     $scope.arrs = TableService.data;
     
-    
+    $scope.activate = function(ID){
+        console.log(ID);
+    }
     
     $scope.up = function(ID){
         for(i=0;i<$scope.arrs.length;i++){
@@ -732,7 +734,7 @@ webApp.controller('TableCreateController', ['$route','TableService','$window','$
             if(TableService.rows==$scope.rows && TableService.cols==$scope.cols)
                 return;
             
-            if($scope.rows>10 || $scope.cols>20){
+            if($scope.rows>14 || $scope.cols>27){
                 alert("size is too large!");
                 return;
             }
@@ -903,19 +905,20 @@ webApp.controller('MenuController', ['$window','MenuService','$scope','$uibModal
             });
     }
     
-     $scope.getDetails = function(){
-        console.log("hello");
+     $scope.getDetails = function(menuId){
         $modal.open({
-                templateUrl: 'forecasts.html',
+                templateUrl: 'menuDetails.html',
                 controller: ['MenuService','$scope', '$uibModalInstance','items', function (MenuService,$scope, $instance, items) {
-
+                     $scope.monthNames = ["filler","January", "February", "March", "April", "May", "June",
+  "July", "August", "September", "October", "November", "December"];
                     $scope.items = items;
-                    $scope.selectedItem;;
-//                    for(i = 0; i<items.length; i++){
-//                        if(items[i].supplierId == supplierId){
-//                            $scope.selectedItem=items[i];
-//                        }
-//                    }
+                    $scope.selectedItem;
+                    for(i = 0; i<items.length; i++){
+                        if(items[i].ID == menuId){
+                            $scope.selectedItem=items[i];
+                        }
+                    }
+                    console.log($scope.selectedItem);
                     $scope.selected = {
                         item: $scope.items[0]
                     };
@@ -954,13 +957,90 @@ webApp.controller('MenuController', ['$window','MenuService','$scope','$uibModal
     
 }]);
 
+webApp.controller('MenuCreateController', ['$route','MenuService','$window','$scope','$uibModal', function($route,MenuService,$window,$scope,$modal){
+    $scope.forecasts = MenuService.forecasts;
+    console.log($scope.forecasts);
+    $scope.currentForecast = $scope.forecasts[0];
+    $scope.selectForecast;
+    $scope.StartDate;
+    $scope.EndDate;
+    $scope.selectMain;
+    
+     $scope.moveItem = function(item, from, to) {
+
+        console.log('Move item   Item: '+item+' From:: '+from+' To:: '+to);
+        //Here from is returned as blank and to as undefined
+         for(i=0;i<item.length;i++){
+            var idx=from.indexOf(item[i]);
+            if (idx != -1) {
+                from.splice(idx, 1);
+                to.push(item[i]);      
+            }
+         }
+    };
+    $scope.moveAll = function(from, to) {
+
+        console.log('Move all  From:: '+from+' To:: '+to);
+        //Here from is returned as blank and to as undefined
+
+        angular.forEach(from, function(item) {
+            to.push(item);
+        });
+        from.length = 0;
+    };           
+    
+    $scope.selectedmains = [];                                
+    $scope.selectedapps = [];                                
+    $scope.selecteddrinks = [];                                
+    $scope.selecteddesserts= []; 
+    
+    $scope.mains = $scope.currentForecast.MainDishes;
+    $scope.apps = $scope.currentForecast.Appetisers;
+    $scope.drinks = $scope.currentForecast.Drinks;
+    $scope.desserts = $scope.currentForecast.Desserts;
+   
+    
+    
+    $scope.updateCurrent = function(){
+        $('#menupicker').show();
+        for(i=0;i<$scope.forecasts.length;i++){
+            if($scope.forecasts[i].Name == $scope.selectForecast)
+                $scope.currentForecast = $scope.forecasts[i];
+        }
+        $scope.mains = $scope.currentForecast.MainDishes;
+        $scope.apps = $scope.currentForecast.Appetisers;
+        $scope.drinks = $scope.currentForecast.Drinks;
+         $scope.desserts = $scope.currentForecast.Desserts;
+        console.log($scope.currentForecast);
+    }
+    
+    $scope.createMenu = function(){
+        var master = {};
+        master.Name = $scope.Name;
+        master.MainDishes = $scope.selectedmains;
+        master.Appetisers = $scope.selectedapps;
+        master.Drinks = $scope.selecteddrinks;
+        master.Desserts = $scope.selecteddesserts;
+        master.StartDate = $('#datepicker').val();
+        master.EndDate = $('#datepicker2').val();
+        master.BasedOn = $scope.currentForecast.Name;
+        if(master.StartDate==""||master.EndDate==""){
+            alert("please enter dates correctly");
+            return;
+        }
+        //Menu Service save call
+        console.log(master);
+    }
+    
+}]);
+
 webApp.factory('MenuService', function($http,SERVER) {
    
     var o = {
         state: 0,
         menus: [
             {ID:5,Name:"Christmas Menu",DateCreated:"12/05/2017",Active:true,
-                MainDishes:["Steak","Fish & Chips","Garden Salad","Salmon Fillet","Escargot"],
+                MainDishes:["Steak","Fish & Chips","Garden Salad","Salmon Fillet","Escargot","Extra Item"],
                 Appetisers:["Kimchi","Radish","Peas & Pods","Truffle Fries"],
                 Drinks:["Coke","Mountain Dew","Pepsi","Root Beer"],
                 Desserts:["Ice-cream","Peanut Bingsu","Mochi","Peaches"],
@@ -969,11 +1049,11 @@ webApp.factory('MenuService', function($http,SERVER) {
                 StartDate: "1/12/2017",
                 EndDate: "31/12/2017"
             },
-            {ID:5,Name:"January Menu",DateCreated:"12/12/2017",Active:false,
-                MainDishes:["Steak","Fish & Chips","Garden Salad","Salmon Fillet","Escargot","Filler","Filler"],
+            {ID:8,Name:"January Menu",DateCreated:"1/5/2018",Active:false,
+                MainDishes:["Steak","Fish & Chips","Garden Salad","Salmon Fillet","Escargot","Filler"],
                 Appetisers:["Kimchi","Radish","Peas & Pods","Truffle Fries","Filler"],
-                Drinks:["Coke","Mountain Dew","Pepsi","Root Beer","Filler","Filler","Filler","Filler"],
-                Desserts:["Ice-cream","Peanut Bingsu","Mochi","Peaches","Filler","Filler"],
+                Drinks:["Coke","Mountain Dew","Pepsi","Root Beer","Filler"],
+                Desserts:["Ice-cream","Peanut Bingsu","Mochi","Peaches","Filler"],
                 SideDishes:["French Fries","Onion Rings","Coleslaw","Mac & Cheese","Filler"],
                 BasedOn:"January 2018",
                 StartDate: "1/12/2017",
@@ -982,11 +1062,11 @@ webApp.factory('MenuService', function($http,SERVER) {
         ],
         forecasts: [
             {ID:5,Name:"Christmas Menu",DateCreated:"12/05/2017",
-                MainDishes:["Steak","Fish & Chips","Garden Salad","Salmon Fillet","Escargot"],
+                MainDishes:["Steak123","Fish & Chips123","Garden Salad123","Salmon Fillet","Escargot","filler","filler2"],
                 Appetisers:["Kimchi","Radish","Peas & Pods","Truffle Fries"],
                 Drinks:["Coke","Mountain Dew","Pepsi","Root Beer"],
                 Desserts:["Ice-cream","Peanut Bingsu","Mochi","Peaches"],
-                SideDishes:["French Fries","Onion Rings","Coleslaw","Mac & Cheese"],
+                SideDishes:["French Fries123","Onion Rings123","Coleslaw123","Mac & Cheese123"],
                 StartDate: "1/12/2017",
                 EndDate: "31/12/2017",
                 LastUpdated:"10/08/2016"
@@ -999,7 +1079,7 @@ webApp.factory('MenuService', function($http,SERVER) {
                 SideDishes:["French Fries","Onion Rings","Coleslaw","Mac & Cheese"],
                 StartDate: "1/01/2017",
                 EndDate: "31/02/2017",
-                lastUpdated:"10/09/2016"
+                LastUpdated:"10/09/2016"
             },
              {ID:5,Name:"March Menu",DateCreated:"12/05/2017",
                 MainDishes:["Steak","Fish & Chips","Garden Salad","Salmon Fillet","Escargot"],
@@ -1009,9 +1089,10 @@ webApp.factory('MenuService', function($http,SERVER) {
                 SideDishes:["French Fries","Onion Rings","Coleslaw","Mac & Cheese"],
                 StartDate: "1/03/2017",
                 EndDate: "31/06/2017",
-                lastUpdated:"10/12/2016"
+                LastUpdated:"10/12/2016"
             },
         ],
+        currentMenu:{}
     };
     
     o.createMenu = function(dataObj){

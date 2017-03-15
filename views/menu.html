@@ -1,3 +1,5 @@
+
+
 <div class="container" style="padding-top:2em">
     <!-- Top Row   -->
     <div>
@@ -9,7 +11,7 @@
                 </button>
         </div>
         <div style="display:inline">
-                <a class="btn btn-success" href="#/purchaseOrders/create">
+                <a class="btn btn-success" href="#/menu/create">
                     <span class="glyphicon glyphicon-plus"></span>
                     Create new
                 </a>
@@ -18,14 +20,16 @@
     
     <!-- List View   -->
     <div class="list-group" style="padding-top:2em">
-      <a href="#" class="list-group-item" ng-repeat="menu in menus">
-          
+      <div class="list-group-item listItem" ng-repeat="menu in menus">
+          <button class="btn btn-primary pull-right" style="display:inline" ng-if="menu.Active==true">Active</button>
+              <button class="btn btn-default pull-right" style="display:inline" ng-if="menu.Active==false">Activate</button>
+          <a ng-click="getDetails(menu.ID)" style="text-decoration:none">
           <div>
               <div style="display:inline;font-size:2.5em;">
                   {{ menu.Name }}
                   <span style="font-size:0.5em;padding-left:1em">{{menu.BasedOn}} forecast</span>
               </div>
-              <button class="btn btn-primary pull-right" style="display:inline" ng-if="menu.Active==true">Active</button>
+              
           </div>
           
           <div class="row dataRow">
@@ -62,8 +66,9 @@
                 </time>  
             </div>
           </div>
+          </a>
           
-      </a>
+      </div>
         
     </div>
     
@@ -87,9 +92,94 @@
                 <span style="font-size:0.5em;color:grey"> Last updated: {{currentForecast.LastUpdated}}</span>
             </h3>
         </div>
+        <div class="row row-eq-height">
+            <div class="col-md-3 text-center forecastBox">
+                <h4>Main Dishes</h4>
+                <div ng-repeat="current in currentForecast.MainDishes">{{current}}</div>
+            </div>
+            <div class="col-md-3 text-center forecastBox">
+                <h4>Appetisers</h4>
+                <div ng-repeat="current in currentForecast.Appetisers">{{current}}</div>
+            </div>
+            <div class="col-md-3 text-center forecastBox">
+                <h4>Drinks</h4>
+                <div ng-repeat="current in currentForecast.Drinks">{{current}}</div>
+            </div>
+            <div class="col-md-3 text-center">
+                <h4>Desserts</h4>
+                <div ng-repeat="current in currentForecast.Desserts">{{current}}</div>
+            </div>
+        </div>
     </div>
     
 	<div class="modal-footer">
+		<button class="btn btn-default" ng-click="cancel()">
+            <span class="glyphicon glyphicon-eye-close"></span> Cancel
+        </button>
+	</div>
+</script>
+
+
+    
+</div>
+
+<!-- Detail View -->
+<script type="text/ng-template" id="menuDetails.html">
+	<div class="modal-header" style="background-color:#139970;color:white">
+        <div style="font-size:2em;display:inline;">{{selectedItem.Name}}
+            <span style="font-size:0.5em;padding-left:1em"> Created on: {{selectedItem.DateCreated}}</span>
+            <div class="pull-right" style="display:inline;font-size:0.8em">{{selectedItem.BasedOn}} forecast</div>
+	</div>
+        </div>
+        
+    
+	<div class="modal-body">
+        <div class="row row-eq-height">
+            <div class="col-md-3 text-center forecastBox">
+                <h4>Main Dishes</h4>
+<!--                 ng-class="{'notIn': (!(current in)) }"-->
+                <div ng-repeat="current in selectedItem.MainDishes">
+                    {{current}}
+                </div>
+            </div>
+            <div class="col-md-3 text-center forecastBox">
+                <h4>Appetisers</h4>
+                <div ng-repeat="current in selectedItem.Appetisers">{{current}}</div>
+            </div>
+            <div class="col-md-3 text-center forecastBox">
+                <h4>Drinks</h4>
+                <div ng-repeat="current in selectedItem.Drinks">{{current}}</div>
+            </div>
+            <div class="col-md-3 text-center">
+                <h4>Desserts</h4>
+                <div ng-repeat="current in selectedItem.Desserts">{{current}}</div>
+            </div>
+        </div>
+        <hr>
+        <div class="row">
+              <div class="col-md-1 pull-right1">
+                <div class="text-center" style="padding-left:1em">Start</div>
+                <time datetime="2013-12-25" class="icon">
+                  <em>{{monthNames[ (selectedItem.StartDate.split("/"))[1] ]}}</em>
+                  <strong>{{ (selectedItem.StartDate.split("/"))[2] }}</strong>
+                  <span>{{ (selectedItem.StartDate.split("/"))[0]}}</span>
+                </time>  
+            </div>
+            <div class="col-md-1 pull-right1 text-center">
+                <div class="text-center" style="padding-left:1em">End</div>
+                <time datetime="2013-12-25" class="icon">
+                  <em>{{monthNames[ (selectedItem.EndDate.split("/"))[1] ]}}</em>
+                  <strong>{{ (selectedItem.EndDate.split("/"))[2] }}</strong>
+                  <span>{{ (selectedItem.EndDate.split("/"))[0]}}</span>
+                </time>  
+            </div>
+        </div>
+    </div>
+    
+	<div class="modal-footer">
+        <a class="btn btn-success">
+            <span class="glyphicon glyphicon-pencil"></span> Edit
+        </a>
 		<button class="btn btn-default" ng-click="cancel()">
             <span class="glyphicon glyphicon-eye-close"></span> Cancel
         </button>
@@ -105,6 +195,23 @@
 
 
 <style>
+    .listItem:hover{
+        background-color:#f9f9f9
+    }
+    
+    .notin{
+        color:purple;
+    }
+    
+    .row-eq-height {
+      display: -webkit-box;
+      display: -webkit-flex;
+      display: -ms-flexbox;
+      display:         flex;
+    }
+    .forecastBox{
+        border-right: 2px solid #e5e5e5;
+    }
     
     .dataRow{
 /*        padding-left:1em;*/

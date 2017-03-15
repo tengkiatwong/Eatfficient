@@ -6,11 +6,16 @@
                     Create new
                 </a>
         </div>
-    <div class="list-group" style="padding-top:1.4em">
-        <a href="#/table/{{item.ID}}" class="list-group-item" ng-repeat="item in arrs" ng-click="up(item.ID)">
+    
+<div class="list-group" style="padding-top:1.4em">
+        <div  class="list-group-item listItem" ng-repeat="item in arrs" ng-click="up(item.ID)">
+             <button class="btn btn-default col-md-1 col-sm-1" ng-if="item.Active==false" ng-click="activate(item.ID)">Activate</button>
+            <button class="btn btn-primary col-md-1 col-sm-1" ng-if="item.Active==true">Active</button>
+            <a href="#/table/{{item.ID}}">
             <div class="row">
                 <h4 class="col-md-4 col-sm-4">{{item.Name}}</h4>
-                <button class="btn btn-primary col-md-1 col-sm-1" ng-if="item.Active==true">Active</button>
+                
+               
                 <div class="pull-right" style="font-size:1.4em;padding-right:2em">Tables used: {{item.Tables}}</div>
             </div>
             <hr style="padding:0;margin-top:5px">
@@ -18,15 +23,18 @@
                 <div class="col-md-1 grid" ng-repeat="col in row track by $index" ng-class="{'table':col==true}">
                 </div>
             </div>
-        </a>
+                </a>
+        </div>
     </div>
-
 
 </div>
 
 
 <style>
-
+.listItem:hover{
+    background-color:#f9f9f9
+}
+    
 .grid {
     border: 1px solid black;
     height: 2em;
@@ -39,3 +47,29 @@
 }
 
 </style>
+
+
+
+
+
+
+<!--
+
+
+ <div class="list-group" style="padding-top:1.4em">
+        <a href="#/table/{{item.ID}}" class="list-group-item" ng-repeat="item in arrs" ng-click="up(item.ID)">
+            <div class="row">
+                <h4 class="col-md-4 col-sm-4">{{item.Name}}</h4>
+                <button class="btn btn-primary col-md-1 col-sm-1" ng-if="item.Active==true">Active</button>
+                <button class="btn btn-default col-md-1 col-sm-1" ng-if="item.Active==false" ng-click="activate(item.ID)">Activate</button>
+                <div class="pull-right" style="font-size:1.4em;padding-right:2em">Tables used: {{item.Tables}}</div>
+            </div>
+            <hr style="padding:0;margin-top:5px">
+            <div class="row" ng-repeat="row in item.Arr" style="padding-left:2em">
+                <div class="col-md-1 grid" ng-repeat="col in row track by $index" ng-class="{'table':col==true}">
+                </div>
+            </div>
+        </a>
+    </div>
+
+-->
