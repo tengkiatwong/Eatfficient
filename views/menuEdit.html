@@ -3,7 +3,7 @@
 <div class="container" style="margin:2em">
     <div style="padding-bottom:2em">
         <div style="font-size:2em;display:inline;padding-right:1em">
-            <i class="glyphicon glyphicon-book"></i> Menu Creation</div>
+            <i class="glyphicon glyphicon-book"></i> Edit Menu</div>
         <div style="display:inline">
         <button class="btn btn-primary" ng-click="createMenu()" ng-disabled="newTableForm.$invalid">
             <span class="glyphicon glyphicon-save"></span>
@@ -17,7 +17,7 @@
             <label>Name</label>
           <form name="newTableForm">
               <span class="glyphicon glyphicon-pencil"></span> 
-              <input type="text" ng-model="Name" placeholder="Name" style="width:12em" required>
+              <input type="text" ng-model="master.Name" placeholder="Name" style="width:12em" required>
           </form>
       </div>
         <!--  Select forecast to base on      -->
@@ -30,7 +30,7 @@
                         $( "#datepicker" ).datepicker(); 
                     }); 
                     </script> 
-                    <input type="text" id="datepicker" ng-model="StartDate" placeholder="Start" required>
+                    <input type="text" id="datepicker" ng-model="master.StartDate" placeholder="Start" required>
               </div>
         </div> 
         
@@ -43,7 +43,7 @@
                         $( "#datepicker2" ).datepicker(); 
                     }); 
                     </script>
-                  <input type="text" id="datepicker2" ng-model="EndDate" placeholder="End" required>
+                  <input type="text" id="datepicker2" ng-model="master.EndDate" placeholder="End" required>
               </div>
         </div>
         </div>
@@ -51,14 +51,10 @@
     
     <!-- Date Pickers   -->
     <div class="row text-center" style="font-size:1.5em;padding-bottom:1em;">
-        Forecast &nbsp;
-            <select name="forecasts" ng-model="selectForecast" ng-change="updateCurrent()">
-              <option ng-repeat="forecast in forecasts" value="{{forecast.Name}}">{{forecast.StartDate}} : {{forecast.Name}}        </option>
-            </select>
-    
+        {{master.BasedOn}} Forecast    
     </div>
     
-    <div style="display:none;" id="menupicker" class="text-center">
+    <div id="menupicker" class="text-center">
         <div class="row">
             <div class="row col-md-6 text-center">
                 <h4>Main Dishes</h4>

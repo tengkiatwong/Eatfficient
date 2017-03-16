@@ -55,6 +55,10 @@ webApp.config(['$routeProvider', function($routeProvider) {
             templateUrl: 'views/menuCreate.html',
             controller: 'MenuCreateController'
         })
+        .when('/menu/edit',{
+            templateUrl: 'views/menuEdit.html',
+            controller: 'MenuEditController'
+        })
         
     
         //Table Module

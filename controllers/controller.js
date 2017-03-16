@@ -735,7 +735,9 @@ webApp.controller('TableCreateController', ['$route','TableService','$window','$
                 return;
             
             if($scope.rows>14 || $scope.cols>27){
-                alert("size is too large!");
+                $scope.rows=14;
+                $scope.cols=27;
+                alert("size is too large!123");
                 return;
             }
             
@@ -746,9 +748,9 @@ webApp.controller('TableCreateController', ['$route','TableService','$window','$
         
     
         $scope.onDropComplete=function(data,evt){
+            console.log("-----Drop Complete");
 //            console.log(evt.event.target.innerText);
-//            console.log(evt.event.target);
-            console.log($scope.rows);
+            console.log(evt.event.target);
 //            console.log("---"+targetID);
             if(targetID=="remove"){
                 console.log("remove fired");
@@ -918,7 +920,7 @@ webApp.controller('MenuController', ['$window','MenuService','$scope','$uibModal
                             $scope.selectedItem=items[i];
                         }
                     }
-                    console.log($scope.selectedItem);
+                    MenuService.currentMenu = $scope.selectedItem;
                     $scope.selected = {
                         item: $scope.items[0]
                     };
@@ -1031,6 +1033,103 @@ webApp.controller('MenuCreateController', ['$route','MenuService','$window','$sc
         //Menu Service save call
         console.log(master);
     }
+    
+}]);
+
+webApp.controller('MenuEditController', ['$route','MenuService','$window','$scope','$uibModal', function($route,MenuService,$window,$scope,$modal){
+    $scope.forecasts = MenuService.forecasts;
+    $scope.currentForecast = $scope.forecasts[0];
+    $scope.selectForecast;
+    $scope.StartDate;
+    $scope.EndDate;
+    $scope.selectMain;
+    
+    $scope.currentMenu = MenuService.currentMenu;
+    $scope.master = angular.copy($scope.currentMenu);
+    console.log($scope.currentMenu);
+    
+     $scope.moveItem = function(item, from, to) {
+
+        console.log('Move item   Item: '+item+' From:: '+from+' To:: '+to);
+        //Here from is returned as blank and to as undefined
+         for(i=0;i<item.length;i++){
+            var idx=from.indexOf(item[i]);
+            if (idx != -1) {
+                from.splice(idx, 1);
+                to.push(item[i]);      
+            }
+         }
+    };
+    $scope.moveAll = function(from, to) {
+
+        console.log('Move all  From:: '+from+' To:: '+to);
+        //Here from is returned as blank and to as undefined
+
+        angular.forEach(from, function(item) {
+            to.push(item);
+        });
+        from.length = 0;
+    };           
+    
+    $scope.selectedmains = $scope.master.MainDishes;                                
+    $scope.selectedapps = $scope.master.Appetisers;                                
+    $scope.selecteddrinks = $scope.master.Drinks;                                
+    $scope.selecteddesserts= $scope.master.Desserts; 
+    
+    $scope.mains = [];
+    $scope.apps = [];
+    $scope.drinks = [];
+    $scope.desserts = [];
+   
+    
+    
+    $scope.updateCurrent = function(){
+        $('#menupicker').show();
+        for(i=0;i<$scope.forecasts.length;i++){
+            if($scope.forecasts[i].Name == $scope.selectForecast)
+                $scope.currentForecast = $scope.forecasts[i];
+        }
+        $scope.mains = $scope.currentForecast.MainDishes;
+        $scope.apps = $scope.currentForecast.Appetisers;
+        $scope.drinks = $scope.currentForecast.Drinks;
+         $scope.desserts = $scope.currentForecast.Desserts;
+        console.log($scope.currentForecast);
+    }
+    
+    $scope.createMenu = function(){
+//        var master = {};
+//        master.Name = $scope.Name;
+//        master.MainDishes = $scope.selectedmains;
+//        master.Appetisers = $scope.selectedapps;
+//        master.Drinks = $scope.selecteddrinks;
+//        master.Desserts = $scope.selecteddesserts;
+        $scope.master.StartDate = $('#datepicker').val();
+        $scope.master.EndDate = $('#datepicker2').val();
+        $scope.master.DateCreated = $scope.getDate();
+        console.log($scope.master.DateCreated);
+//        master.BasedOn = $scope.currentForecast.Name;
+        if(master.StartDate==""||master.EndDate==""){
+            alert("please enter dates correctly");
+            return;
+        }
+//        //Menu Service save call
+        console.log($scope.master);
+    }
+     $scope.getDate = function(){
+            var today = new Date();
+            var dd = today.getDate();
+            var mm = today.getMonth()+1; //January is 0!
+
+            var yyyy = today.getFullYear();
+            if(dd<10){
+                dd='0'+dd;
+            } 
+            if(mm<10){
+                mm='0'+mm;
+            } 
+            var today = dd+'/'+mm+'/'+yyyy;
+            return today;
+        }
     
 }]);
 

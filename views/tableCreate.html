@@ -33,7 +33,7 @@
     .draggable-objects li{
         float:left;
         display: block;
-        width: 10em;
+        width: 7em;
         height:5em;
 /*        padding:1em 1em 1em 1em;*/
         text-align: center;
@@ -83,30 +83,31 @@
 <body>
 
   <div class="container" style="padding-top:2em">
-      <div style="font-size:1.3em">
+      <div style="font-size:1.3em;padding-top:0em">
           <form name="newTableForm" style="display:inline">
         <span class="glyphicon glyphicon-pencil"></span> <input type="text" ng-model="Name" placeholder="Name" style="width:12em" required>
         </form>
           <button class="btn btn-success" ng-disabled="newTableForm.$invalid" ng-click="saveLayout()"><span class="glyphicon glyphicon-save"></span>Save</button>
       </div>
       <div class="row" style="padding-top:1em">
-        <ul class="draggable-objects col-md-2" style="padding: 0;border-radius:2em">
+        <ul class="draggable-objects col-md-1" style="padding: 0;border-radius:2em">
             <p style="text-align:center">Tables</p>
-            <li  ng-repeat="obj in draggableObjects" >
+            <li  ng-repeat="obj in draggableObjects">
                 <div ng-drag="true" ng-drag-data="obj" data-allow-transform="true"> {{obj.name}} </div>
             </li>
         </ul>
-            <div ng-drop="true" targetID="remove" ng-drop-success="pro($data,$event)" style="width:10em;height:7em;color:white;border-radius:2em;padding-top:2em" class="col-md-6">
+            <div ng-drop="true" targetID="remove" ng-drop-success="pro($data,$event)" style="width:10em;height:7em;color:black;border-radius:2em;padding-top:0em" class="col-md-6">
+                <p>Remove</p>
                 <img src="/assets/dustbin.png" style="height:3em">
 
           </div>
           <div class="col-md-4 row">
            <form>
-            <div class="col-md-6">
+            <div class="col-md-7" style="padding-top:1em;padding-right:0em">
                 Rows:<input type="number" name="FirstName" ng-model="rows"><br>
                 Cols: <input type="number" name="LastName" ng-model="cols"><br>
             </div>
-               <div class="col-md-6">
+               <div class="col-md-1" style="padding-left:0;padding-top:1em;font-size:1.5em">
             <button class="btn btn-primary" ng-click="resize()"><span class="glyphicon glyphicon-resize-full"></span></button>
                 </div>
             </form>
@@ -114,10 +115,10 @@
           
       </div>
 <div ng-repeat="i in arr" class="row">
-      <div ng-drop="true" ng-drop-success="onDropComplete($data,$event)" ng-repeat="e in i" targetID = {{e.position}} class="col-md-1 col-sm-1" style="border: 1px solid black">
+      <div ng-drop="true" ng-drop-success="onDropComplete($data,$event)" ng-repeat="e in i" targetID = {{e.position}} class="col-md-1 col-sm-1" style="border: 1px solid black" ng-drag-data="obj">
          
 
-          <div ng-repeat="obj in e.items" ng-drag="true" ng-drag-data="obj" ng-center-anchor="{{centerAnchor}}" ng-repeat="e in i" targetID = {{e.position}}>
+          <div ng-repeat="obj in e.items" ng-drag="true" ng-drag-data="obj" draggable="true" ng-center-anchor="{{centerAnchor}}" ng-repeat="e in i" targetID = {{e.position}}>
               {{obj.name}}
           </div>
 
