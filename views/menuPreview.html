@@ -1,0 +1,136 @@
+<div class="container" style="padding-top:1.5em;padding-bottom:2em" id="ignorePDF">
+    <h2 style="display:inline;padding-right:2em">Menu Preview</h2>
+    <div style="display:inline;padding-right:2em;font-size:1.4em">
+        Select Menu&nbsp;
+        <select name="forecasts" ng-model="selectMenu" ng-change="updateCurrent()">
+          <option ng-repeat="menu in menus" value="{{menu.Name}}">{{menu.StartDate}} : {{menu.Name}}</option>
+        </select>
+    </div>
+    <div style="display:inline">
+            <button class="btn btn-primary" ng-click="print()">
+                <span class="glyphicon glyphicon-print"></span> Print Menu
+            </button>
+    </div>
+</div>
+<div class="container text-center">
+    <h2>{{currentMenu.Name}}</h2>
+</div>
+
+<div id="printableArea" class="container" style="padding-top:3em;border:2px solid orange">
+    <section class="menu">
+        <h1 class="menu_restName">OutBackers</h1>
+        <h2 class="menu_title">All Day Menu</h2><div class="menu_section menu_section_14896834925">
+        <h3>Main Dishes</h3>
+        <div class="menu_item menu_item_14896835023" ng-repeat="mainDish in currentMenu.MainDishes">
+            <h4 class="name">{{mainDish}}</h4>
+            <span class="price">$ 14.99</span>
+            <p class="description">Best Son of a gun salmon roe you've ever tasted</p>
+            <hr>
+        </div>
+        <h3>Appetisers</h3>
+        <div class="menu_item menu_item_14896835023" ng-repeat="mainDish in currentMenu.Appetisers">
+            <h4 class="name">{{mainDish}}</h4>
+            <span class="price">$ 14.99</span>
+            <p class="description">Best Son of a gun salmon roe you've ever tasted</p>
+            <hr>
+        </div>
+        <h3>Drinks</h3>
+        <div class="menu_item menu_item_14896835023" ng-repeat="mainDish in currentMenu.Drinks">
+            <h4 class="name">{{mainDish}}</h4>
+            <span class="price">$ 14.99</span>
+            <p class="description">Best Son of a gun salmon roe you've ever tasted</p>
+            <hr>
+        </div>
+        <h3>Desserts</h3>
+        <div class="menu_item menu_item_14896835023" ng-repeat="mainDish in currentMenu.Desserts">
+            <h4 class="name">{{mainDish}}</h4>
+            <span class="price">$ 14.99</span>
+            <p class="description">Best Son of a gun salmon roe you've ever tasted</p>
+            <hr>
+        </div>
+    </div></section>
+
+</div>
+
+
+	
+
+<style>
+    #printableArea{
+        background-color: white;
+        padding-left:4em;
+        padding-right:4em
+    }
+			.menu {
+				margin-bottom: 15px;
+				max-width: 1200px;
+    			margin: 0 auto;
+			}
+			.menu_restName {
+				text-align: center;
+    			font-size: 70px;
+    			margin-top: 0;
+			}
+			.menu_title {
+				text-align: center;
+			}
+			.menu_section {
+				margin-bottom: 30px;
+			}
+			.menu_section h3 {
+				font-style: italic;
+			}
+			.menu_item {
+				margin: 0 15px;
+				position: relative;
+			}
+			.menu_item h4 {
+				margin-bottom: 0px;
+			}
+			.price {
+				display: block;
+				float: right;
+				position: absolute;
+				bottom: 0px;
+				right: 0;
+				font-weight: bold;
+			}
+			.description {
+				margin-top: 5px;
+				font-style: italic;
+				display: inline-block;
+				max-width: 50%;
+                background-color: white;
+			}
+			hr {
+				border: none;
+    			border-top: 1px dotted black;
+    			margin-top: -20px;
+			}
+			footer:not(.app-footer) {
+				text-align: center;
+    			font-size: 11px;
+				font-style: italic;
+			}
+			@media (max-width: 575px) {
+				.menu_title {
+					text-align: center;
+					font-size: 30px;
+				}
+				.menu_section h3 {
+					text-align: center;
+    				font-size: 30px;
+				}
+				.menu_item {
+					text-align: center;
+				}
+				.price {
+					float: none;
+					position: static;
+					margin-top: 15px;
+				}
+				hr {
+					display: none;
+				}
+			}
+		</style>

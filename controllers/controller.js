@@ -1133,6 +1133,32 @@ webApp.controller('MenuEditController', ['$route','MenuService','$window','$scop
     
 }]);
 
+webApp.controller('MenuPreviewController', ['$route','MenuService','$window','$scope','$uibModal', function($route,MenuService,$window,$scope,$modal){
+    $scope.menus = MenuService.menus;
+    $scope.currentMenu = $scope.menus[0];
+    $scope.selectMenu;
+    
+    console.log($scope.currentMenu);
+    
+    $scope.updateCurrent = function(){
+        for(i=0;i<$scope.menus.length;i++){
+            if($scope.menus[i].Name == $scope.selectMenu)
+                $scope.currentMenu = $scope.menus[i];
+        }
+    }
+
+    $scope.print = function(){
+        var pdf = new jsPDF('p', 'pt', 'letter');
+         pdf.addHTML($('#printableArea')[0], function () {
+//             pdf.output("dataurlnewwindow");
+             var fileName = $scope.currentMenu.Name+"_"+$scope.currentMenu.StartDate;
+             pdf.save(fileName);
+         });
+        }
+    
+    
+}]);
+
 webApp.factory('MenuService', function($http,SERVER) {
    
     var o = {
@@ -1149,7 +1175,7 @@ webApp.factory('MenuService', function($http,SERVER) {
                 EndDate: "31/12/2017"
             },
             {ID:8,Name:"January Menu",DateCreated:"1/5/2018",Active:false,
-                MainDishes:["Steak","Fish & Chips","Garden Salad","Salmon Fillet","Escargot","Filler"],
+                MainDishes:["Ribeye","Tenderloin","Salt Bae","Salmon Fillet","Escargot","Filler"],
                 Appetisers:["Kimchi","Radish","Peas & Pods","Truffle Fries","Filler"],
                 Drinks:["Coke","Mountain Dew","Pepsi","Root Beer","Filler"],
                 Desserts:["Ice-cream","Peanut Bingsu","Mochi","Peaches","Filler"],

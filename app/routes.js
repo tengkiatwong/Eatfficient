@@ -59,8 +59,11 @@ webApp.config(['$routeProvider', function($routeProvider) {
             templateUrl: 'views/menuEdit.html',
             controller: 'MenuEditController'
         })
-        
-    
+        .when('/menu/preview',{
+            templateUrl: 'views/menuPreview.html',
+            controller: 'MenuPreviewController'
+        })
+          
         //Table Module
         .when('/table',{
             templateUrl: 'views/table.html',
