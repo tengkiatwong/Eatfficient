@@ -1150,9 +1150,11 @@ webApp.controller('MenuPreviewController', ['$route','MenuService','$window','$s
     $scope.print = function(){
         var pdf = new jsPDF('p', 'pt', 'letter');
          pdf.addHTML($('#printableArea')[0], function () {
-//             pdf.output("dataurlnewwindow");
+
              var fileName = $scope.currentMenu.Name+"_"+$scope.currentMenu.StartDate;
-             pdf.save(fileName);
+             //output new window or save
+//             pdf.save(fileName);
+             pdf.output("dataurlnewwindow");
          });
         }
     
@@ -1286,10 +1288,11 @@ webApp.factory('SupplierService', function($http,SERVER) {
         console.log(dataObj);
         return $http({
             method: 'GET',
-            url:SERVER.url+'/TestEnterprise-war/webresources/ejb.SupplierRestful/createSupplier',
+            url:SERVER.url+'/TestEnterprise-war/webresources/ejb.InventoryManagementModule/createSupplier',
             params: dataObj,
         }).success(function(data){
-            //console.log(data);
+            console.log(data);
+            console.log("succes");
             o.orders = data;
         });
     }
@@ -1297,7 +1300,7 @@ webApp.factory('SupplierService', function($http,SERVER) {
      o.getOrders = function(){
         return $http({
             method: 'GET',
-            url:SERVER.url+'/TestEnterprise-war/webresources/ejb.SupplierRestful/getAllSuppliers',
+            url:SERVER.url+'/TestEnterprise-war/webresources/ejb.InventoryManagementModule/getAllSuppliers',
 //            params: {param1: "ULTRAMAN KangKong"}
         }).success(function(data){
             console.log(data);
@@ -1310,7 +1313,7 @@ webApp.factory('SupplierService', function($http,SERVER) {
          console.log(dataObj);
         return $http({
             method: 'GET',
-            url:SERVER.url+'/TestEnterprise-war/webresources/ejb.SupplierRestful/editSupplier',
+            url:SERVER.url+'/TestEnterprise-war/webresources/ejb.InventoryManagementModule/editSupplier',
             params: dataObj
         }).success(function(data){
             console.log(data);
@@ -1324,7 +1327,7 @@ webApp.factory('SupplierService', function($http,SERVER) {
         return $http({
             method: 'GET',
             //change URL to delete
-            url:SERVER.url+'/TestEnterprise-war/webresources/ejb.SupplierRestful/deleteSupplier',
+            url:SERVER.url+'/TestEnterprise-war/webresources/ejb.InventoryManagementModule/deleteSupplier',
             params: dataObj
         }).success(function(data){
             console.log(data);
@@ -1347,7 +1350,7 @@ webApp.factory('EditIngredient', function($http,SERVER) {
         console.log("getAllIngredients");
         return $http({
             method: 'GET',
-            url:SERVER.url+'/TestEnterprise-war/webresources/ejb.IngredientsRestful/getAllIngredients',
+            url:SERVER.url+'/TestEnterprise-war/webresources/ejb.InventoryManagementModule/getAllIngredients',
 //            params: {name:"Supersonic one punch man"}
 //            params: {id: 1001}
         }).success(function(data){
@@ -1381,7 +1384,7 @@ webApp.factory('PoService',function($http,SERVER){
         console.log("getAllPurchaseOrders");
         return $http({
             method: 'GET',
-            url:SERVER.url+'/TestEnterprise-war/webresources/ejb.purchaseOrderRestful/GetAllPurchaseOrder',
+            url:SERVER.url+'/TestEnterprise-war/webresources/ejb.InventoryManagementModule/GetAllPurchaseOrder',
 //            url:SERVER.url+'/TestEnterprise-war/webresources/ejb.purchaseOrderRestful/getPurchaseOrder',
 //            params: {id:"501"}
         }).success(function(data){
@@ -1411,7 +1414,7 @@ webApp.factory('PoService',function($http,SERVER){
     o.createOrder = function(dataObj){
         return $http({
             method: 'POST',
-            url:SERVER.url+'/TestEnterprise-war/webresources/ejb.purchaseOrderRestful/createPurchaseOrderJson',
+            url:SERVER.url+'/TestEnterprise-war/webresources/ejb.InventoryManagementModule/createPurchaseOrderJson',
             params: dataObj,
         }).success(function(data){
             console.log(data);
@@ -1422,7 +1425,7 @@ webApp.factory('PoService',function($http,SERVER){
     o.editOrder = function(dataObj){
          return $http({
             method: 'GET',
-            url:SERVER.url+'/TestEnterprise-war/webresources/ejb.purchaseOrderRestful/editPurchaseOrder',
+            url:SERVER.url+'/TestEnterprise-war/webresources/ejb.InventoryManagementModule/editPurchaseOrder',
             params: dataObj,
         }).success(function(data){
             console.log(data);
@@ -1432,7 +1435,7 @@ webApp.factory('PoService',function($http,SERVER){
      o.deleteOrder = function(dataObj){
          return $http({
             method: 'GET',
-            url:SERVER.url+'/TestEnterprise-war/webresources/ejb.purchaseOrderRestful/deletePurchaseOrder',
+            url:SERVER.url+'/TestEnterprise-war/webresources/ejb.InventoryManagementModule/deletePurchaseOrder',
             params: dataObj,
         }).success(function(data){
             console.log(data);
