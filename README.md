@@ -1,6 +1,6 @@
-# Boilerplate
+Eatfficient Outlet Management Web Application
 
-Includes a sample Web App Boilerplate
+This web Application helps outlet managers stay on top of information concerning their outlet with a variety of management tools at their disposal. This version has been integrated with the tablets in the restaurant as well as information from the mobile application
 
 * Angular (1.5.5) 
 * Twitter Bootstrap (3.3.6) 
